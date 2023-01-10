@@ -45,6 +45,7 @@ dependencies:
   location: ^4.4.0
   flutter_form_builder: ^7.7.0
   geolocator: ^9.0.2
+  fl_chart: ^0.55.2
 
 dev_dependencies:
   flutter_test:
