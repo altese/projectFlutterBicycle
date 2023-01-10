@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'view/home.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const Home(),
+      //getx필요시 오픈
+      // getPages: [
+      // GetPage(
+      // name: "/",
+      // page: page,
+      // )
+      // ],
+    );
+  }
+}

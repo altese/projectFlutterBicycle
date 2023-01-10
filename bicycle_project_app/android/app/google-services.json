@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "860889378999",
+    "project_id": "bicycle-project-98ae1",
+    "storage_bucket": "bicycle-project-98ae1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860889378999:android:8c0543dfe8d78fc1159d32",
+        "android_client_info": {
+          "package_name": "com.example.bicycle_project_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860889378999-em07svnca9er5o1077hu56t1s9ohuq14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9CsT0zlk8np85wtNmMTx4XSWc8TbJhko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860889378999-em07svnca9er5o1077hu56t1s9ohuq14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
