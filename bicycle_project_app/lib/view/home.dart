@@ -1,10 +1,10 @@
 import 'package:bicycle_project_app/view/component/icons/my_flutter_app_icons.dart';
+import 'package:bicycle_project_app/view/google_map.dart';
 import 'package:bicycle_project_app/view/home0.dart';
 import 'package:bicycle_project_app/view/home3.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-import 'home1.dart';
 import 'home2.dart';
 import 'home4.dart';
 
@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     //바텀 바 아이콘
-    List pages = const [Home0(), Home1(), Home2(), Home3(), Home4()];
+    List pages = const [Home0(), SimpleMap(), Home2(), Home3(), Home4()];
     final items = [
       const Icon(Icons.home, size: 30),
       const Icon(Icons.map_rounded, size: 30),
