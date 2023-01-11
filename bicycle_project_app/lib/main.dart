@@ -1,7 +1,6 @@
 import 'package:bicycle_project_app/view/station.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'view/home.dart';
 
 void main() {
