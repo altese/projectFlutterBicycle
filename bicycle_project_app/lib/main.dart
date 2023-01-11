@@ -1,4 +1,3 @@
-import 'package:bicycle_project_app/view/pages/auth_page.dart';
 import 'package:bicycle_project_app/view/station.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
