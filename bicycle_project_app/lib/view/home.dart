@@ -4,7 +4,6 @@ import 'package:bicycle_project_app/view/google_map.dart';
 import 'package:bicycle_project_app/view/home_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'home2.dart';
 import 'home4.dart';
 
