@@ -150,7 +150,7 @@ class _SimpleMapState extends State<SimpleMap> {
               );
             },
             label: const Text('대여소'),
-            icon: const Icon(Icons.location_city_outlined),
+            icon: const Icon(Icons.bike_scooter),
             elevation: 8,
           ),
         ),
