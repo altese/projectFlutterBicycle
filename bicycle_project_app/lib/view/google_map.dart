@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:bicycle_project_app/Model/station_static.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class SimpleMap extends StatefulWidget {
   const SimpleMap({super.key});
@@ -27,6 +30,8 @@ class _SimpleMapState extends State<SimpleMap> {
   late List<Marker> _markers;
   String result = 'all';
 
+  late List data; // 대여소별 따릉이 거치수 api
+
   late List latitude;
   late List longitude;
   late List stationNum;
@@ -38,6 +43,11 @@ class _SimpleMapState extends State<SimpleMap> {
   @override
   void initState() {
     super.initState();
+
+    // 대여소별 따릉이 거치수 api
+    data = [];
+    getJSONData();
+
     _markers = [];
     latitude = ['37.52407', '37.47603', '37.49401', '37.50723'];
     longitude = ['127.0218', '127.1059', '127.0795', '127.0569'];
@@ -126,6 +136,8 @@ class _SimpleMapState extends State<SimpleMap> {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          StationStatic.stationNum =
+                              int.parse(stationNum[selectedItem]);
                           clickButton();
                         },
                         child: const Text(
@@ -210,8 +222,20 @@ class _SimpleMapState extends State<SimpleMap> {
                             ),
                           ),
                           const Text(
-                            '    거치대 수',
+                            '    거치대수 : ',
                             style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            StationStatic.stationNum == 2301
+                                ? StationStatic.parking2301
+                                : StationStatic.stationNum == 2348
+                                    ? StationStatic.parking2348
+                                    : StationStatic.stationNum == 2384
+                                        ? StationStatic.parking2384
+                                        : StationStatic.parking2342,
+                            style: const TextStyle(
                               fontSize: 20,
                             ),
                           ),
@@ -265,6 +289,26 @@ class _SimpleMapState extends State<SimpleMap> {
     });
 
     navigator!.pop();
+  }
+
+  // --- Function ---
+  Future<bool> getJSONData() async {
+    var url = Uri.parse(
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1536/1606/');
+    var response = await http.get(url);
+    var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+
+    List result = dateConvertedJSON['rentBikeStatus']['row'];
+
+    setState(() {
+      data.addAll(result);
+    });
+    StationStatic.parking2301 = data[0]['parkingBikeTotCnt'];
+    StationStatic.parking2342 = data[38]['parkingBikeTotCnt'];
+    StationStatic.parking2348 = data[42]['parkingBikeTotCnt'];
+    StationStatic.parking2384 = data[70]['parkingBikeTotCnt'];
+
+    return true;
   }
 
   // getJSONData() async {
