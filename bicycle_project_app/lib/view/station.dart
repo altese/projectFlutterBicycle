@@ -19,6 +19,11 @@ class _StationState extends State<Station> {
   late TextEditingController windspeed; // 풍속
   String result = 'all';
 
+  late List clusterResult2384;
+  late List clusterResult2342;
+  late List clusterResult2301;
+  late List clusterResult2348;
+
   // 계절
   late List season;
   int seasonNum = 0;
@@ -53,7 +58,86 @@ class _StationState extends State<Station> {
     humidity = TextEditingController();
     windspeed = TextEditingController();
 
-    print(StationStatic.stationNum);
+    clusterResult2384 = [
+      '32 ~ 48',
+      '46 ~ 51',
+      '37 ~ 41',
+      '18 ~ 27',
+      '69 ~ 77',
+      '55 ~ 71',
+      '45 ~ 57',
+      '50 ~ 57',
+      '57 ~ 66',
+      '59 ~ 70',
+      '18 ~ 26',
+      '70 ~ 80',
+      '37 ~ 56'
+    ];
+    clusterResult2342 = [
+      '59 ~ 68',
+      '78 ~ 90',
+      '23 ~ 32',
+      '58 ~ 68',
+      '82 ~ 87',
+      '73 ~ 85',
+      '21 ~ 28',
+      '72 ~ 81',
+      '79 ~ 86',
+      '24 ~ 36',
+      '20 ~ 32',
+      '28 ~ 60',
+      '45 ~ 66',
+      '22 ~ 27',
+      '77 ~ 82'
+    ];
+    clusterResult2301 = [
+      '246 ~ 267',
+      '29 ~ 34',
+      '150 ~ 178',
+      '309 ~ 315',
+      '15 ~ 19',
+      '135 ~ 180',
+      '28 ~ 82',
+      '144 ~ 174',
+      '35 ~ 68',
+      '19 ~ 34',
+      '68 ~ 108',
+      '80 ~ 106',
+      '159 ~ 181',
+      '258 ~ 276',
+      '16 ~ 25',
+      '126 ~ 148',
+      '115 ~ 146',
+      '196 ~ 225',
+      '121 ~ 247',
+      '74 ~ 117',
+      '244 ~ 308',
+      '33 ~ 39',
+      '31 ~ 36',
+      '13 ~ 27',
+      '34 ~ 66',
+      '11 ~ 15',
+      '15 ~ 92',
+      '32 ~ 45',
+      '151 ~ 219',
+      '18 ~ 27'
+    ];
+
+    clusterResult2348 = [
+      '38 ~ 68',
+      '7 ~ 21',
+      '71 ~ 81',
+      '59 ~ 73',
+      '21 ~ 34',
+      '49 ~ 72',
+      '34 ~ 43',
+      '18 ~ 54',
+      '37 ~ 87',
+      '72 ~ 92',
+      '25 ~ 35',
+      '28 ~ 35',
+      '28 ~ 35'
+    ];
 
     // 계절
     season = [true, false, false, false];
@@ -222,33 +306,36 @@ class _StationState extends State<Station> {
 
     var url;
     if (StationStatic.stationNum == 2301) {
-      print('1');
       url = Uri.parse(
           'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
     } else if (StationStatic.stationNum == 2384) {
-      print('2');
       url = Uri.parse(
           'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
     } else if (StationStatic.stationNum == 2342) {
-      print('3');
       url = Uri.parse(
           'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
     } else {
-      print('4');
       url = Uri.parse(
           'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
     }
-    print(url);
     var response = await http.get(url);
-
-    print('-------------');
-    print(response.body);
-    print('-------------');
 
     setState(() {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       result = dataConvertedJSON['result'];
     });
+    print(int.parse(result));
+
+    if (StationStatic.stationNum == 2301) {
+      result = clusterResult2301[int.parse(result) - 1];
+    } else if (StationStatic.stationNum == 2384) {
+      result = clusterResult2384[int.parse(result) - 1];
+    } else if (StationStatic.stationNum == 2342) {
+      result = clusterResult2342[int.parse(result) - 1];
+    } else {
+      result = clusterResult2348[int.parse(result) - 1];
+    }
+
     _showDialog(context, result);
   }
 
@@ -257,8 +344,8 @@ class _StationState extends State<Station> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('품종 예측 결과'),
-          content: Text('입력하신 품종을 $result 입니다.'),
+          title: const Text('대여량 예측 결과'),
+          content: Text('${StationStatic.stationNum} 대여소의 대여량은 $result대 입니다.'),
         );
       },
     );
