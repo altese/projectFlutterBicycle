@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bicycle_project_app/Model/weather_static.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -252,6 +253,12 @@ class _HomePageState extends State<HomePage> {
       }
       // print("-----");
     }
+
+    // static에 필요한 데이터 저장
+    weatherStatic.REH = double.parse(selectWeather[4]['fcstValue']);
+    weatherStatic.TMN = double.parse(selectWeather[6]['fcstValue']);
+    weatherStatic.TMX = double.parse(selectWeather[5]['fcstValue']);
+    weatherStatic.WSD = double.parse(selectWeather[1]['fcstValue']);
 
     print("\n--- selectWeather: $selectWeather---\n");
 
