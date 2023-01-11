@@ -1,3 +1,4 @@
+import 'package:bicycle_project_app/view/station.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,9 +22,6 @@ class _SimpleMapState extends State<SimpleMap> {
 
   void onMapCreated(GoogleMapController controller) async {
     _controller = controller;
-    String value = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_style.json');
-    _controller.setMapStyle(value);
   }
 
   late List<Marker> _markers;
@@ -85,7 +83,7 @@ class _SimpleMapState extends State<SimpleMap> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 60, right: 10),
+          margin: const EdgeInsets.only(top: 60, right: 10),
           alignment: Alignment.topRight,
           child: FloatingActionButton.extended(
             onPressed: () {
@@ -235,7 +233,9 @@ class _SimpleMapState extends State<SimpleMap> {
                           ),
                           TextButton(
                             onPressed: () {
-                              //
+                              Navigator.pushNamed(context, '/station');
+                              // Get.toNamed(
+                              //     '/station?station=${stationNum[selectedItem]}');
                             },
                             child: const Text(
                               '예측하러가기',
