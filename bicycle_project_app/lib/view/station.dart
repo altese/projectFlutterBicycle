@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bicycle_project_app/Model/station_static.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -17,8 +18,6 @@ class _StationState extends State<Station> {
   late TextEditingController humidity; // 습도
   late TextEditingController windspeed; // 풍속
   String result = 'all';
-
-  late var stationNum; // google_map_dart에서 예측하기 버튼 클릭시 받아오는 대여소 번호
 
   // 계절
   late List season;
@@ -54,9 +53,7 @@ class _StationState extends State<Station> {
     humidity = TextEditingController();
     windspeed = TextEditingController();
 
-    stationNum = Get.parameters['station'] ??
-        '_'; // google_map_dart에서 예측하기 버튼 클릭시 받아오는 대여소 번호
-    print(stationNum);
+    print(StationStatic.stationNum);
 
     // 계절
     season = [true, false, false, false];
@@ -223,10 +220,31 @@ class _StationState extends State<Station> {
       holidayNum = 0;
     }
 
-    var url = Uri.parse(
-        'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
+    var url;
+    if (StationStatic.stationNum == 2301) {
+      print('1');
+      url = Uri.parse(
+          'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
+    } else if (StationStatic.stationNum == 2384) {
+      print('2');
+      url = Uri.parse(
+          'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
+    } else if (StationStatic.stationNum == 2342) {
+      print('3');
+      url = Uri.parse(
+          'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
+    } else {
+      print('4');
+      url = Uri.parse(
+          'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=${selectedMonth.substring(0, 1)}&holiday=$holidayNum');
+    }
+    print(url);
     var response = await http.get(url);
+
+    print('-------------');
     print(response.body);
+    print('-------------');
+
     setState(() {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       result = dataConvertedJSON['result'];
