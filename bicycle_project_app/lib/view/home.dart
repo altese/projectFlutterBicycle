@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+
       body: pages[index],
 
       bottomNavigationBar: Theme(

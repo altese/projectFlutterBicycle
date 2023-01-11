@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bicycle_project_app/Model/station_static.dart';
+import 'package:bicycle_project_app/Model/weather_static.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -272,14 +273,30 @@ class _StationState extends State<Station> {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                getJSONData();
-              },
-              child: const Text(
-                '예측하기',
-              ),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    getJSONData();
+                  },
+                  child: const Text(
+                    '예측하기',
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    getWeatherData();
+                  },
+                  child: const Text(
+                    '날씨 데이터 가져오기',
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -349,5 +366,15 @@ class _StationState extends State<Station> {
         );
       },
     );
+  }
+
+  // 버튼 클릭시 날씨정보 텍스트 필드로 가져오기
+  getWeatherData() {
+    setState(() {
+      temp.text = weatherStatic.TMN.toString();
+      atemp.text = weatherStatic.TMX.toString();
+      humidity.text = weatherStatic.REH.toString();
+      windspeed.text = weatherStatic.WSD.toString();
+    });
   }
 } // End
