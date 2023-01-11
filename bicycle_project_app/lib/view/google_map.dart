@@ -1,4 +1,4 @@
-import 'package:bicycle_project_app/view/station.dart';
+import 'package:bicycle_project_app/Model/station_static.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -234,8 +234,8 @@ class _SimpleMapState extends State<SimpleMap> {
                           TextButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/station');
-                              // Get.toNamed(
-                              //     '/station?station=${stationNum[selectedItem]}');
+                              StationStatic.stationNum =
+                                  int.parse(stationNum[selectedItem]);
                             },
                             child: const Text(
                               '예측하러가기',
