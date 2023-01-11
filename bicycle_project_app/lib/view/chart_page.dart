@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Model/rent.dart';
@@ -96,7 +97,7 @@ class _ChartPageState extends State<ChartPage> {
                   return Chart(station: station);
                 } else {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CupertinoActivityIndicator(),
                   );
                 }
               },
