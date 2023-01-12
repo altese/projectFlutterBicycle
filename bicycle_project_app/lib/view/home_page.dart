@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bicycle_project_app/Model/station_static.dart';
 import 'package:bicycle_project_app/Model/usestatus.dart';
 import 'package:bicycle_project_app/Model/weather_static.dart';
+import 'package:bicycle_project_app/main.dart';
 import 'package:bicycle_project_app/view/utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -87,230 +88,246 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          FutureBuilder(
-            future: getJSONData(baseDate),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FutureBuilder(
+              future: getJSONData(baseDate),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            labelDate,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
+                        children: const [SizedBox(height: 20)],
+                      ),
+                      Container(
+                        height: 200,
+                        width: 350,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.7),
+                              spreadRadius: 0,
+                              blurRadius: 2.0,
+                              offset: const Offset(0, 2),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 200,
-                      width: 350,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.7),
-                            spreadRadius: 0,
-                            blurRadius: 2.0,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      int.parse(selectWeather["SKY"]
+                                                  ['fcstValue']) <
+                                              5
+                                          ? const Icon(
+                                              Icons.sunny,
+                                              size: 100,
+                                              color: Color(0xffFFDE00),
+                                            )
+                                          : int.parse(selectWeather["SKY"]
+                                                      ['fcstValue']) <
+                                                  8
+                                              ? const Icon(
+                                                  Icons.cloud,
+                                                  size: 100,
+                                                  color: Color(0xff3C79F5),
+                                                )
+                                              : const Icon(
+                                                  Icons.cloudy_snowing,
+                                                  size: 100,
+                                                  color: Color(0xff3C79F5),
+                                                ),
+                                      Text(
+                                        '${selectWeather["TMP"]['fcstValue']}°',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 50,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    int.parse(selectWeather["SKY"]
-                                                ['fcstValue']) <
-                                            5
-                                        ? const Icon(
-                                            Icons.sunny,
-                                            size: 100,
-                                            color: Color(0xffFFDE00),
-                                          )
-                                        : int.parse(selectWeather["SKY"]
-                                                    ['fcstValue']) <
-                                                8
-                                            ? const Icon(
-                                                Icons.cloud,
-                                                size: 100,
-                                                color: Color(0xff3C79F5),
-                                              )
-                                            : const Icon(
-                                                Icons.cloudy_snowing,
-                                                size: 100,
-                                                color: Color(0xff3C79F5),
-                                              ),
                                     Text(
-                                      '${selectWeather["TMP"]['fcstValue']}°',
+                                      int.parse(selectWeather["SKY"]
+                                                  ['fcstValue']) <
+                                              5
+                                          ? '맑음'
+                                          : int.parse(selectWeather["SKY"]
+                                                      ['fcstValue']) <
+                                                  8
+                                              ? '구름 많음'
+                                              : '흐림',
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 50,
+                                        fontSize: 20,
                                         color: Colors.black,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    int.parse(selectWeather["SKY"]
-                                                ['fcstValue']) <
-                                            5
-                                        ? '맑음'
-                                        : int.parse(selectWeather["SKY"]
-                                                    ['fcstValue']) <
-                                                8
-                                            ? '구름 많음'
-                                            : '흐림',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text('최고 '),
+                                    Text(
+                                      '${selectWeather["TMX"]['fcstValue']}° ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text('최고 '),
-                                  Text(
-                                    '${selectWeather["TMX"]['fcstValue']}° ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text('최저 '),
-                                  Text(
-                                    '${selectWeather["TMN"]['fcstValue']}° ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text('풍속 '),
-                                  Text(
-                                    '${selectWeather["WSD"]['fcstValue']}m/s ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text('강수 확률 '),
-                                  Text(
-                                    '${selectWeather["POP"]['fcstValue']}% ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              )
-                            ],
+                                    const Text('최저 '),
+                                    Text(
+                                      '${selectWeather["TMN"]['fcstValue']}° ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text('풍속 '),
+                                    Text(
+                                      '${selectWeather["WSD"]['fcstValue']}m/s ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text('강수 확률 '),
+                                    Text(
+                                      '${selectWeather["POP"]['fcstValue']}% ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            Container(
+              height: 500,
+              width: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.7),
+                    spreadRadius: 0,
+                    blurRadius: 2.0,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  TableCalendar<Event>(
+                    locale: 'ko_KR',
+                    firstDay: kFirstDay,
+                    lastDay: kLastDay,
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    rangeStartDay: _rangeStart,
+                    rangeEndDay: _rangeEnd,
+                    calendarFormat: _calendarFormat,
+                    rangeSelectionMode: _rangeSelectionMode,
+                    startingDayOfWeek: StartingDayOfWeek.sunday,
+                    calendarStyle: const CalendarStyle(
+                      // Use `CalendarStyle` to customize the UI
+                      outsideDaysVisible: false,
                     ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-          TableCalendar<Event>(
-            locale: 'ko_KR',
-            firstDay: kFirstDay,
-            lastDay: kLastDay,
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            startingDayOfWeek: StartingDayOfWeek.sunday,
-            calendarStyle: CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
-              outsideDaysVisible: false,
+                    onDaySelected: _onDaySelected,
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                    },
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      titleTextFormatter: (date, locale) =>
+                          DateFormat.yMMMMd(locale).format(date),
+                      formatButtonVisible: false,
+                      titleTextStyle: const TextStyle(
+                        fontSize: 20.0,
+                        // color: Color.fromRGBO(118, 186, 153, 1),
+                      ),
+                      headerPadding: const EdgeInsets.symmetric(vertical: 4.0),
+                      leftChevronIcon: const Icon(
+                        Icons.arrow_left,
+                        size: 40.0,
+                        color: Color.fromRGBO(118, 186, 153, 1),
+                      ),
+                      rightChevronIcon: const Icon(
+                        Icons.arrow_right,
+                        size: 40.0,
+                        color: Color.fromRGBO(118, 186, 153, 1),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          '2301 대여량 : ${StationStatic.rent2301} 반납량 :${StationStatic.return2301}\n'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          '2342 대여량 : ${StationStatic.rent2342} 반납량 :${StationStatic.return2342}\n'),
+                    ],
+                  ),
+                  // const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          '2348 대여량 : ${StationStatic.rent2348} 반납량 :${StationStatic.return2348}\n'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          '2384 대여량 : ${StationStatic.rent2384} 반납량 :${StationStatic.return2384}\n'),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            onDaySelected: _onDaySelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            headerStyle: HeaderStyle(
-              titleCentered: true,
-              titleTextFormatter: (date, locale) =>
-                  DateFormat.yMMMMd(locale).format(date),
-              formatButtonVisible: false,
-              titleTextStyle: const TextStyle(
-                fontSize: 20.0,
-                color: Colors.blue,
-              ),
-              headerPadding: const EdgeInsets.symmetric(vertical: 4.0),
-              leftChevronIcon: const Icon(Icons.arrow_left, size: 40.0),
-              rightChevronIcon: const Icon(Icons.arrow_right, size: 40.0),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('2301 대여량 : ' +
-                  StationStatic.rent2301 +
-                  ' 반납량 :' +
-                  StationStatic.return2301 +
-                  '\n'),
-              SizedBox(
-                width: 20,
-              ),
-              Text('2342 대여량 : ' +
-                  StationStatic.rent2342 +
-                  ' 반납량 :' +
-                  StationStatic.return2342 +
-                  '\n'),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('2348 대여량 : ' +
-                  StationStatic.rent2348 +
-                  ' 반납량 :' +
-                  StationStatic.return2348 +
-                  '\n'),
-              SizedBox(
-                width: 20,
-              ),
-              Text('2384 대여량 : ' +
-                  StationStatic.rent2384 +
-                  ' 반납량 :' +
-                  StationStatic.return2384 +
-                  '\n'),
-            ],
-          ),
-        ],
+            // ignore: prefer_const_constructors
+            SizedBox(height: 100)
+          ],
+        ),
       ),
     );
   }
@@ -324,18 +341,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<String> getJSONData(String baseDate) async {
     String baseTime;
-
-    // print('hour: ${DateTime.now().hour}');
-    // print('minute: ${DateTime.now().minute}');
-
-    // print('currentTime: $currentbaseTime');
-
-    // if (DateTime.now().hour <= 0200) {
-    //   // 0200시 이전이라면 전날이어야함
-
-    //   baseDate = (double.parse(formatDate(DateTime.now(), [yyyy, mm, dd])) - 1)
-    //       as String;
-    // }
 
     if (int.parse(currentbaseTime) < 0200) {
       baseDate = '${(double.parse(formatDate(DateTime.now(), [

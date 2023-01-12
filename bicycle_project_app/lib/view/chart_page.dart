@@ -154,8 +154,8 @@ class _ChartPageState extends State<ChartPage> {
                   return Chart(station: station);
                 } else {
                   return const Center(
-                    child: CupertinoActivityIndicator(),
-                  );
+                      // child: CupertinoActivityIndicator(),
+                      );
                 }
               },
             ),
