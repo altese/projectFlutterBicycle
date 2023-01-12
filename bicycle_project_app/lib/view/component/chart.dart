@@ -1,7 +1,8 @@
+import 'package:bicycle_project_app/Style/my_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../Model/rent.dart';
+import '../../Model/rent.dart';
 
 class Chart extends StatefulWidget {
   final String station;
@@ -18,21 +19,13 @@ class _ChartState extends State<Chart> {
     const Color(0xff02d39a),
   ];
 
-  late List rentData = [];
+  // late List rentData2301 = [];
+  //  FlSpot(1, double.parse(Rent.rentCounts[0]['rcount']))
 
   @override
   void initState() {
     super.initState();
-    // getData();
-    // print(rentData);
   }
-
-  // getData() async {
-  //   rentData = await Rent.rentCounts;
-  // }
-
-  // 이 값을 기준으로 차트가 바뀜
-  // String showAvg = widget.station;
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +38,17 @@ class _ChartState extends State<Chart> {
               borderRadius: BorderRadius.all(
                 Radius.circular(18),
               ),
-              color: Color.fromARGB(255, 218, 218, 218),
+              color: Color.fromARGB(255, 238, 238, 238),
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                right: 18,
+                right: 25,
                 left: 12,
-                top: 24,
+                top: 40,
                 bottom: 12,
               ),
               child: LineChart(
-                // showAvg가 true면 avgData(), false면 mainData() 호출
+                // widget.station이 2301, 2342, 2348, 2384일 때 그려지는 차트
                 widget.station == "2301"
                     ? chart2301()
                     : widget.station == "2342"
@@ -67,18 +60,35 @@ class _ChartState extends State<Chart> {
             ),
           ),
         ),
-        SizedBox(
-          width: 110,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              //
-            },
-            child: const Text(
-              '2342 대여소',
-              style: TextStyle(
-                fontSize: 12,
-                color: Color.fromARGB(255, 54, 54, 54),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Container(
+            width: 150,
+            height: 32,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: widget.station == "2301"
+                  ? MyColors.circleColors[0]
+                  : widget.station == "2342"
+                      ? MyColors.circleColors[1]
+                      : widget.station == "2348"
+                          ? MyColors.circleColors[2]
+                          : MyColors.circleColors[3],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                textAlign: TextAlign.center,
+                widget.station == "2301"
+                    ? '2301 대여소 대여량'
+                    : widget.station == "2342"
+                        ? '2342 대여소 대여량'
+                        : widget.station == "2348"
+                            ? '2348 대여소 대여량'
+                            : '2384 대여소 대여량',
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
               ),
             ),
           ),
@@ -131,11 +141,12 @@ class _ChartState extends State<Chart> {
       case 0:
         text = '0';
         break;
-      case 1250:
-        text = '1250';
-        break;
+
       case 2500:
         text = '2500';
+        break;
+      case 5000:
+        text = '5000';
         break;
       default:
         return Container();
@@ -147,24 +158,6 @@ class _ChartState extends State<Chart> {
   // ===================================================================== chart 2301
   LineChartData chart2301() {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 202, 202, 202),
-            // strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 218, 218, 218),
-            // strokeWidth: 1,
-          );
-        },
-      ),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: AxisTitles(
@@ -241,24 +234,6 @@ class _ChartState extends State<Chart> {
   // ===================================================================== chart 2342
   LineChartData chart2342() {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 202, 202, 202),
-            // strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 218, 218, 218),
-            // strokeWidth: 1,
-          );
-        },
-      ),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: AxisTitles(
@@ -332,27 +307,9 @@ class _ChartState extends State<Chart> {
     );
   }
 
-  // ===================================================================== chart 2342
+  // ===================================================================== chart 2348
   LineChartData chart2348() {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 202, 202, 202),
-            // strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 218, 218, 218),
-            // strokeWidth: 1,
-          );
-        },
-      ),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: AxisTitles(
@@ -426,27 +383,9 @@ class _ChartState extends State<Chart> {
     );
   }
 
-  // ===================================================================== chart 2348
+  // ===================================================================== chart 2384
   LineChartData chart2384() {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 202, 202, 202),
-            // strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color.fromARGB(255, 218, 218, 218),
-            // strokeWidth: 1,
-          );
-        },
-      ),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: AxisTitles(
