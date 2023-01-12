@@ -37,12 +37,6 @@ class _HomePageState extends State<HomePage> {
   DateTime? _rangeEnd;
   int dialogCnt = 0;
 
-  @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
-  }
-
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
