@@ -292,22 +292,67 @@ class _SimpleMapState extends State<SimpleMap> {
   }
 
   // --- Function ---
+  // Future<bool> getJSONData() async {
+  //   var url = Uri.parse(
+  //       'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1536/1606/');
+  //   var response = await http.get(url);
+  //   var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+
+  //   List result = dateConvertedJSON['rentBikeStatus']['row'];
+
+  //   setState(() {
+  //     data.addAll(result);
+  //   });
+  //   StationStatic.parking2301 = data[0]['parkingBikeTotCnt'];
+  //   StationStatic.parking2342 = data[38]['parkingBikeTotCnt'];
+  //   StationStatic.parking2348 = data[42]['parkingBikeTotCnt'];
+  //   StationStatic.parking2384 = data[70]['parkingBikeTotCnt'];
+
+  //   print("——————————————————————————");
+  //   print(data[0]['stationName']);
+  //   print("ParkingBiketoCount : " + data[0]['parkingBikeTotCnt']);
+  //   print(StationStatic.parking2301);
+  //   print(data[38]['stationName']);
+  //   print("ParkingBiketoCount : " + data[38]['parkingBikeTotCnt']);
+  //   print(StationStatic.parking2342);
+  //   print(data[42]['stationName']);
+  //   print("ParkingBiketoCount : " + data[42]['parkingBikeTotCnt']);
+  //   print(StationStatic.parking2348);
+  //   print(data[70]['stationName']);
+  //   print("ParkingBiketoCount : " + data[70]['parkingBikeTotCnt']);
+  //   print(StationStatic.parking2384);
+  //   return true;
+
+  //   return true;
+  // }
   Future<bool> getJSONData() async {
     var url = Uri.parse(
-        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1536/1606/');
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1530/1610/');
     var response = await http.get(url);
+    //print(response.body);
     var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-
     List result = dateConvertedJSON['rentBikeStatus']['row'];
-
-    setState(() {
-      data.addAll(result);
-    });
-    StationStatic.parking2301 = data[0]['parkingBikeTotCnt'];
-    StationStatic.parking2342 = data[38]['parkingBikeTotCnt'];
-    StationStatic.parking2348 = data[42]['parkingBikeTotCnt'];
-    StationStatic.parking2384 = data[70]['parkingBikeTotCnt'];
-
+//2301. 현대고등학교 건너편 "stationId":"ST-777"
+//2342. 대청역 1번출구  뒤 "stationId":"ST-823"
+//2348. 포스코사거리(기업은행) "stationId":"ST-797"
+//2384. 자곡사거리 "stationId":"ST-1364"
+    //print("-----------------------------------------------------");
+    for (int i = 0; i < result.length; i++) {
+      //print(result[i]['stationId']);
+      if (result[i]['stationId'] == "ST-777") {
+        StationStatic.parking2301 = result[i]['parkingBikeTotCnt'];
+        print(result[i]['stationName']);
+      } else if (result[i]['stationId'] == "ST-823") {
+        StationStatic.parking2342 = result[i]['parkingBikeTotCnt'];
+        print(result[i]['stationName']);
+      } else if (result[i]['stationId'] == "ST-797") {
+        StationStatic.parking2348 = result[i]['parkingBikeTotCnt'];
+        print(result[i]['stationName']);
+      } else if (result[i]['stationId'] == "ST-1364") {
+        StationStatic.parking2384 = result[i]['parkingBikeTotCnt'];
+        print(result[i]['stationName']);
+      }
+    }
     return true;
   }
 
