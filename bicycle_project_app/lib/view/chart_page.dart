@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:bicycle_project_app/view/component/bar_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -157,6 +159,8 @@ class _ChartPageState extends State<ChartPage> {
                 }
               },
             ),
+            const SizedBox(height: 20),
+            const MyBarChart(),
           ],
           // ),
           // body: Column(

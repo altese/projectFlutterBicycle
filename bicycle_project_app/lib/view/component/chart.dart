@@ -88,6 +88,7 @@ class _ChartState extends State<Chart> {
                             : '2384 대여소 대여량',
                 style: const TextStyle(
                   fontSize: 15,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
