@@ -17,24 +17,17 @@ class Home2 extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2> {
-<<<<<<< Updated upstream
-=======
   late String temp; // 최저기온
   late String atemp; // 최고기온
   late String humidity; // 습도
   late String windspeed; // 풍속
 
->>>>>>> Stashed changes
   late List data;
   late List pbike;
   late bool checkValue;
   String result = 'all';
   // 계절
-<<<<<<< Updated upstream
-  late List season;
-=======
   late String season;
->>>>>>> Stashed changes
   int seasonNum = 0;
   // 계절
 
@@ -72,13 +65,10 @@ class _Home2State extends State<Home2> {
   @override
   void initState() {
     super.initState();
-<<<<<<< Updated upstream
-=======
     temp = weatherStatic.TMN.toString();
     atemp = weatherStatic.TMX.toString();
     humidity = weatherStatic.REH.toString();
     windspeed = weatherStatic.WSD.toString();
->>>>>>> Stashed changes
     data = [];
     pbike = [];
     checkValue = false;
@@ -90,19 +80,6 @@ class _Home2State extends State<Home2> {
     if (_toDay.month.toString() == '1' ||
         _toDay.month.toString() == '2' ||
         _toDay.month.toString() == '12') {
-<<<<<<< Updated upstream
-      season = [false, false, false, true];
-    } else if (_toDay.month.toString() == '3' ||
-        _toDay.month.toString() == '4' ||
-        _toDay.month.toString() == '5') {
-      season = [true, false, false, false];
-    } else if (_toDay.month.toString() == '6' ||
-        _toDay.month.toString() == '7' ||
-        _toDay.month.toString() == '8') {
-      season = [false, true, false, false];
-    } else {
-      season = [false, false, true, false];
-=======
       season = '1';
     } else if (_toDay.month.toString() == '3' ||
         _toDay.month.toString() == '4' ||
@@ -114,7 +91,6 @@ class _Home2State extends State<Home2> {
       season = '3';
     } else {
       season = '4';
->>>>>>> Stashed changes
     }
 
     holiday = false;
@@ -480,32 +456,12 @@ class _Home2State extends State<Home2> {
   }
 
   // 화면실행시 자동실행되는 예측함수
-<<<<<<< Updated upstream
-  getJSONData2() async {
-    // 계절을 숫자로 변경 후 jsp로 전달
-    if (season[0] == true) {
-      seasonNum = 1; // 봄
-    } else if (season[1] == true) {
-      seasonNum = 2; // 여름
-    } else if (season[2] == true) {
-      seasonNum = 3; // 가을
-    } else {
-      seasonNum = 4; // 겨울
-    }
-
-    if (holiday == true) {
-      // 공휴일을 숫자로 변경 후 jsp로 전달
-      holidayNum = 1; // 공휴일
-    } else {
-      holidayNum = 0; // 비공휴일
-=======
   getJSONData2384() async {
     if (holiday == true) {
       // 공휴일을 숫자로 변경 후 jsp로 전달
       holidayNum = 0; // 공휴일
     } else {
       holidayNum = 1; // 비공휴일
->>>>>>> Stashed changes
     }
 
     // 날짜를 숫자로 변경 후 jsp로 전달
@@ -520,20 +476,6 @@ class _Home2State extends State<Home2> {
 
     var url;
     if (StationStatic.stationNum == 2301) {
-<<<<<<< Updated upstream
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    } else if (StationStatic.stationNum == 2384) {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    } else if (StationStatic.stationNum == 2342) {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    } else {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp.text}&atemp=${atemp.text}&humidity=${humidity.text}&windspeed=${windspeed.text}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    }
-=======
     } else if (StationStatic.stationNum == 2384) {
       url = Uri.parse(
           'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
@@ -549,25 +491,17 @@ class _Home2State extends State<Home2> {
     url = Uri.parse(
         'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
 
->>>>>>> Stashed changes
     var response = await http.get(url);
 
     setState(() {
       var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
       result = dataConvertedJSON['result'];
     });
-<<<<<<< Updated upstream
-
-    // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
-    if (StationStatic.stationNum == 2301) {
-      result = clusterResult2301[int.parse(result) - 1];
-=======
     result = clusterResult2301[int.parse(result) - 1];
 
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
     if (StationStatic.stationNum == 2301) {
->>>>>>> Stashed changes
     } else if (StationStatic.stationNum == 2384) {
       result = clusterResult2384[int.parse(result) - 1];
     } else if (StationStatic.stationNum == 2342) {
