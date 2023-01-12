@@ -87,6 +87,60 @@ class _ChartPageState extends State<ChartPage> {
                       child: const Text('2342'),
                     ),
                   ),
+                  const SizedBox(width: 25),
+                  GestureDetector(
+                    onTap: () {
+                      //---------------------------------------------- 2348 버튼 클릭
+                      station = "2348";
+                      setState(() {});
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: const Color(0xffC4DFAE),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 0,
+                            blurRadius: 2.0,
+                            offset: const Offset(
+                                0, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: const Text('2348'),
+                    ),
+                  ),
+                  const SizedBox(width: 25),
+                  GestureDetector(
+                    onTap: () {
+                      //---------------------------------------------- 2348 버튼 클릭
+                      station = "2384";
+                      setState(() {});
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: const Color(0xffC0C99F),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 0,
+                            blurRadius: 2.0,
+                            offset: const Offset(
+                                0, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: const Text('2384'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -129,7 +183,7 @@ class _ChartPageState extends State<ChartPage> {
     Rent.rentCounts.addAll(result);
     // Rent.fromMap(result);
     // });
-    print('${Rent.rentCounts[0]['rcount']}');
+    print('rcount: ${Rent.rentCounts[0]['rcount']}');
     return true;
   }
 }//END

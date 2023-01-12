@@ -13,15 +13,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> selectWeather = [];
+  late Map<String, dynamic> selectWeather;
   late String baseDate;
   late String labelDate;
+  late String currentbaseTime;
+  late String next1;
+  late String next2;
+  late String next3;
+  late String next4;
 
   @override
   void initState() {
     super.initState();
     baseDate = formatDate(DateTime.now(), [yyyy, mm, dd]);
     labelDate = formatDate(DateTime.now(), [yyyy, '년', mm, '월', dd, '일']);
+    currentbaseTime = formatDate(DateTime.now(), [hh, mm]);
+    selectWeather = {};
+
     getJSONData(baseDate);
     // });
   }
@@ -75,13 +83,14 @@ class _HomePageState extends State<HomePage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                int.parse(selectWeather[2]['fcstValue']) < 5
+                                int.parse(selectWeather["SKY"]['fcstValue']) < 5
                                     ? const Icon(
                                         Icons.sunny,
                                         size: 100,
                                         color: Color(0xffFFDE00),
                                       )
-                                    : int.parse(selectWeather[2]['fcstValue']) <
+                                    : int.parse(selectWeather["SKY"]
+                                                ['fcstValue']) <
                                             8
                                         ? const Icon(
                                             Icons.cloud,
@@ -94,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                             color: Color(0xff3C79F5),
                                           ),
                                 Text(
-                                  '${selectWeather[0]['fcstValue']}°',
+                                  '${selectWeather["TMP"]['fcstValue']}°',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 50,
@@ -108,9 +117,10 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                int.parse(selectWeather[2]['fcstValue']) < 5
+                                int.parse(selectWeather["SKY"]['fcstValue']) < 5
                                     ? '맑음'
-                                    : int.parse(selectWeather[2]['fcstValue']) <
+                                    : int.parse(selectWeather["SKY"]
+                                                ['fcstValue']) <
                                             8
                                         ? '구름 많음'
                                         : '흐림',
@@ -127,25 +137,25 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               const Text('최고 '),
                               Text(
-                                '${selectWeather[5]['fcstValue']}° ',
+                                '${selectWeather["TMX"]['fcstValue']}° ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               const Text('최저 '),
                               Text(
-                                '${selectWeather[0]['fcstValue']}° ',
+                                '${selectWeather["TMN"]['fcstValue']}° ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               const Text('풍속 '),
                               Text(
-                                '${selectWeather[1]['fcstValue']}m/s ',
+                                '${selectWeather["WSD"]['fcstValue']}m/s ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-                              const Text('습도 '),
+                              const Text('강수 확률 '),
                               Text(
-                                '${selectWeather[4]['fcstValue']}% ',
+                                '${selectWeather["POP"]['fcstValue']}% ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -168,16 +178,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //---------------------- funcs
-  // Future<bool> weatherWithTimer() async {
-  //   Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-  //     baseDate = formatDate(DateTime.now(), [yyyy, mm, dd]);
-  //     print(baseDate);
-  //   });
-  //   getJSONData();
-  //   return true;
-  // }
-
   pickDate() {
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       baseDate = formatDate(DateTime.now(), [yyyy, mm, dd]);
@@ -186,24 +186,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<String> getJSONData(String baseDate) async {
-    // var baseDate = await Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-    //   formatDate(DateTime.now(), [yyyy, mm, dd]);
-    //   // print(baseDate);
-    // });
+    String baseTime;
 
+    print('hour: ${DateTime.now().hour}');
+    print('minute: ${DateTime.now().minute}');
+
+    // if (DateTime.now().hour <= 0200) {
+    //   // 0200시 이전이라면 전날이어야함
+
+    //   baseDate = (double.parse(formatDate(DateTime.now(), [yyyy, mm, dd])) - 1)
+    //       as String;
+    // }
+
+    baseTime = int.parse(currentbaseTime) < 0200
+        ? "2300"
+        : int.parse(currentbaseTime) < 0500
+            ? "0200"
+            : int.parse(currentbaseTime) < 0800
+                ? "0500"
+                : int.parse(currentbaseTime) < 1100
+                    ? "0800"
+                    : int.parse(currentbaseTime) < 1400
+                        ? "1100"
+                        : int.parse(currentbaseTime) < 1700
+                            ? "1400"
+                            : int.parse(currentbaseTime) < 2000
+                                ? "1700"
+                                : "2000";
     var key =
         'EKnVo4X9GAgmVw7dZkmP2uWXbE8dizew4hMPJ5t5L8%2B8%2BIGgBT19eADTmIO2qNJNWEyD8WNghSJbez97er%2FMlw%3D%3D';
 
+    print('baseTime: $baseTime');
+    print('baseDate: $baseDate');
     var url = Uri.parse(
-        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=$baseDate&base_time=0500&nx=55&ny=127');
+        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=55&ny=127');
     var response = await http.get(url);
     var dataConvertedToJSON = json.decode(response.body);
 
-    print('body: ${response.body}');
+    // print('body: ${response.body}');
 
     List result = dataConvertedToJSON["response"]["body"]["items"]["item"];
 
-    print(result);
+    // print(result);
+
+    // weatherTime();
 
     Map<String, dynamic> jsonToMap;
 
@@ -213,70 +239,46 @@ class _HomePageState extends State<HomePage> {
       if (jsonToMap.values.contains("POP") &&
           jsonToMap.values.contains(baseDate) &&
           jsonToMap.values.contains("0800")) {
-        selectWeather.add(jsonToMap);
-
-        // print(jsonToMap);
+        selectWeather["POP"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMN") &&
           jsonToMap.values.contains(baseDate)) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["TMN"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMX") &&
           jsonToMap.values.contains(baseDate)) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["TMX"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMP") &&
           jsonToMap.values.contains(baseDate) &&
           jsonToMap.values.contains("0800")) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["TMP"] = jsonToMap;
       }
       if (jsonToMap.values.contains("REH") &&
           jsonToMap.values.contains(baseDate) &&
           jsonToMap.values.contains("0800")) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["REH"] = jsonToMap;
       }
       if (jsonToMap.values.contains("SKY") &&
           jsonToMap.values.contains(baseDate) &&
           jsonToMap.values.contains("0800")) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["SKY"] = jsonToMap;
       }
       if (jsonToMap.values.contains("WSD") &&
           jsonToMap.values.contains(baseDate) &&
           jsonToMap.values.contains("0800")) {
-        selectWeather.add(jsonToMap);
-        // print(jsonToMap);
+        selectWeather["WSD"] = jsonToMap;
       }
-      // print("-----");
     }
 
+    print(selectWeather);
+
     // static에 필요한 데이터 저장
-    weatherStatic.REH = double.parse(selectWeather[4]['fcstValue']);
-    weatherStatic.TMN = double.parse(selectWeather[6]['fcstValue']);
-    weatherStatic.TMX = double.parse(selectWeather[5]['fcstValue']);
-    weatherStatic.WSD = double.parse(selectWeather[1]['fcstValue']);
-
-    print("\n--- selectWeather: $selectWeather---\n");
-
-    print(
-        "0: TMP ${selectWeather[0]['category']}, ${selectWeather[0]['fcstValue']}");
-    print(
-        "1: WSD ${selectWeather[1]['category']}, ${selectWeather[1]['fcstValue']}");
-    print(
-        "2: SKY ${selectWeather[2]['category']}, ${selectWeather[2]['fcstValue']}");
-    print(
-        "3: POP ${selectWeather[3]['category']}, ${selectWeather[3]['fcstValue']}");
-    print(
-        "4: REH ${selectWeather[4]['category']}, ${selectWeather[4]['fcstValue']}");
-    print(
-        "5: TMX ${selectWeather[5]['category']}, ${selectWeather[5]['fcstValue']}");
-    print(
-        "6: TMN ${selectWeather[6]['category']}, ${selectWeather[6]['fcstValue']}");
+    weatherStatic.REH = double.parse(selectWeather["REH"]['fcstValue']);
+    weatherStatic.TMN = double.parse(selectWeather["TMN"]['fcstValue']);
+    weatherStatic.TMX = double.parse(selectWeather["TMX"]['fcstValue']);
+    weatherStatic.WSD = double.parse(selectWeather["WSD"]['fcstValue']);
 
     return "success";
   }
-}//END
+} //END
