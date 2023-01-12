@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Model/rent.dart';
-import 'chart.dart';
+import 'component/chart.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -34,6 +34,7 @@ class _ChartPageState extends State<ChartPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -73,7 +74,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: const Color(0xffDFE8CC),
+                        color: Color.fromARGB(255, 210, 227, 174),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -100,7 +101,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: const Color(0xffC4DFAE),
+                        color: Color.fromARGB(255, 176, 217, 142),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -117,7 +118,7 @@ class _ChartPageState extends State<ChartPage> {
                   const SizedBox(width: 25),
                   GestureDetector(
                     onTap: () {
-                      //---------------------------------------------- 2348 버튼 클릭
+                      //---------------------------------------------- 2384 버튼 클릭
                       station = "2384";
                       setState(() {});
                     },
@@ -127,7 +128,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: const Color(0xffC0C99F),
+                        color: Color.fromARGB(255, 130, 183, 164),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -175,10 +176,10 @@ class _ChartPageState extends State<ChartPage> {
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];
 
-    print('---------------------');
-    print('body: ${result}\n');
-    print('---------------------');
-    print('${result[0]['rcount']}');
+    // print('---------------------');
+    // print('body: ${result}\n');
+    // print('---------------------');
+    // print('${result[0]['rcount']}');
     // setState(() {
     Rent.rentCounts.addAll(result);
     // Rent.fromMap(result);
