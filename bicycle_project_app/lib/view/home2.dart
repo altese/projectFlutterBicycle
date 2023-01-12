@@ -225,7 +225,27 @@ class _Home2State extends State<Home2> {
                     // ],
                   ),
                   child: Row(
-                    children: [Text(total)],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '예상 총 대여량',
+                        style: TextStyle(
+                          fontSize: 23,
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Text(
+                        total,
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -252,19 +272,23 @@ class _Home2State extends State<Home2> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        getJSONData2301();
-                        getJSONData2342();
-                        getJSONData2348();
-                        getJSONData2384();
-                      });
-                      print(pResult);
-                    },
-                    child: Text('조회하기'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(118, 186, 153, 1),
-                    ))
+                  onPressed: () {
+                    setState(() {
+                      getJSONData2301();
+                      getJSONData2342();
+                      getJSONData2348();
+                      getJSONData2384();
+                    });
+                    print(pResult);
+                  },
+                  child: Text('조회하기'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(118, 186, 153, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                ),
               ],
             ),
             //=============firebase 리스트 불러올 경우 =====================
