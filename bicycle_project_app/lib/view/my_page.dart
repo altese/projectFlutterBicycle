@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Home4 extends StatefulWidget {
-  const Home4({super.key});
+class MyPage extends StatefulWidget {
+  const MyPage({super.key});
 
   @override
-  State<Home4> createState() => _Home4State();
+  State<MyPage> createState() => _MyPageState();
 }
 
-class _Home4State extends State<Home4> {
+class _MyPageState extends State<MyPage> {
   List containers = ["정보 수정", "로그아웃", "일지"];
   List icons = [Icons.person, Icons.logout, Icons.calendar_month];
   List texts = ["정보 수정", "로그아웃", "일지"];
