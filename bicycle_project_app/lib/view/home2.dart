@@ -17,12 +17,20 @@ class Home2 extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2> {
+  String name = '';
+  late TextEditingController searchTf;
   late String temp; // 최저기온
   late String atemp; // 최고기온
   late String humidity; // 습도
   late String windspeed; // 풍속
 
   late String total;
+  List<Color> colorlist = [
+    Color.fromRGBO(234, 250, 209, 1),
+    Color.fromRGBO(181, 226, 218, 1),
+    Color.fromRGBO(147, 197, 243, 1),
+    Color.fromRGBO(160, 164, 253, 1),
+  ];
 
   late List data;
   late List pbike;
@@ -77,6 +85,7 @@ class _Home2State extends State<Home2> {
   void initState() {
     super.initState();
     total = '';
+    searchTf = TextEditingController();
     temp = weatherStatic.TMN.toString();
     atemp = weatherStatic.TMX.toString();
     humidity = weatherStatic.REH.toString();
@@ -206,7 +215,7 @@ class _Home2State extends State<Home2> {
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 11),
               child: GestureDetector(
                 onTap: () {
-                  calc();
+                  // calc();
                 },
                 child: Container(
                   height: 100,
@@ -231,7 +240,7 @@ class _Home2State extends State<Home2> {
                         '예상 총 대여량',
                         style: TextStyle(
                           fontSize: 23,
-                          color: Colors.green[700],
+                          color: Color.fromARGB(255, 91, 91, 91),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -249,6 +258,16 @@ class _Home2State extends State<Home2> {
                   ),
                 ),
               ),
+            ),
+            TextField(
+              controller: searchTf,
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search), hintText: '검색..'),
+              onChanged: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
             ),
             Row(
               children: [
@@ -278,6 +297,7 @@ class _Home2State extends State<Home2> {
                       getJSONData2342();
                       getJSONData2348();
                       getJSONData2384();
+                      calc();
                     });
                     print(pResult);
                   },
@@ -403,81 +423,161 @@ class _Home2State extends State<Home2> {
 
   //Widget
   Widget _buildItemWidget(doc, index) {
-    final mystation = MyStation(
-      sname: doc['sname'],
-      snum: doc['snum'],
-      sparkednum: doc['sparkednum'],
-      sexpectednum: doc['sexpectednum'],
-    );
+    if (name.isEmpty) {
+      final mystation = MyStation(
+        sname: doc['sname'],
+        snum: doc['snum'],
+        sparkednum: doc['sparkednum'],
+        sexpectednum: doc['sexpectednum'],
+      );
 
-    return Dismissible(
-      direction: DismissDirection.endToStart,
-      background: Container(
-        color: Colors.red,
-        alignment: Alignment.centerRight,
-        child: const Icon(Icons.delete),
-      ),
-      key: ValueKey(doc),
-      onDismissed: (direction) {
-        // FirebaseFirestore.instance.collection('mystation').doc(doc.id).delete();
-      },
-      child: GestureDetector(
-        onTap: () {
-          Message.id = doc.id;
-          Message.snum = doc['snum'];
-          Message.sparkednum = doc['sparkednum'];
-          Message.sexpectednum = doc['sexpectednum'];
-          // Navigator.push(
-          //   context,
-          //    MaterialPageRoute(
-          //     builder: (context) => const Update(),),);
+      return Dismissible(
+        direction: DismissDirection.endToStart,
+        background: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.delete),
+        ),
+        key: ValueKey(doc),
+        onDismissed: (direction) {
+          // FirebaseFirestore.instance.collection('mystation').doc(doc.id).delete();
         },
-        // 대여소별 리스트 ==========================================
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Container(
-            height: 85,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.grey[300],
-            ),
-            child: ListTile(
-              title: Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${mystation.snum}',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(mystation.sname),
-                      ],
+        child: GestureDetector(
+          onTap: () {
+            Message.id = doc.id;
+            Message.snum = doc['snum'];
+            Message.sparkednum = doc['sparkednum'];
+            Message.sexpectednum = doc['sexpectednum'];
+            // Navigator.push(
+            //   context,
+            //    MaterialPageRoute(
+            //     builder: (context) => const Update(),),);
+          },
+          // 대여소별 리스트 ==========================================
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Container(
+              height: 85,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colorlist[index],
+              ),
+              child: ListTile(
+                title: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
                     ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
-                ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${mystation.snum}',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(mystation.sname),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    if (doc['sname'].toString().contains(name.toLowerCase())) {
+      final mystation = MyStation(
+        sname: doc['sname'],
+        snum: doc['snum'],
+        sparkednum: doc['sparkednum'],
+        sexpectednum: doc['sexpectednum'],
+      );
+
+      return Dismissible(
+        direction: DismissDirection.endToStart,
+        background: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.delete),
+        ),
+        key: ValueKey(doc),
+        onDismissed: (direction) {
+          // FirebaseFirestore.instance.collection('mystation').doc(doc.id).delete();
+        },
+        child: GestureDetector(
+          onTap: () {
+            Message.id = doc.id;
+            Message.snum = doc['snum'];
+            Message.sparkednum = doc['sparkednum'];
+            Message.sexpectednum = doc['sexpectednum'];
+            // Navigator.push(
+            //   context,
+            //    MaterialPageRoute(
+            //     builder: (context) => const Update(),),);
+          },
+          // 대여소별 리스트 ==========================================
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Container(
+              height: 85,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colorlist[index],
+              ),
+              child: ListTile(
+                title: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${mystation.snum}',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(mystation.sname),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
   // --- Function ---
@@ -650,10 +750,7 @@ class _Home2State extends State<Home2> {
     // _showDialog(context, result);
   }
 
-  void calc() {
-    print(pResult[1]);
-    print(pResult[1].toString().substring(0, 3));
-
+  Future calc() async {
     setState(() {
       total = (int.parse(pResult[0].toString().substring(0, 3)) +
                   int.parse(pResult[1].toString().substring(0, 3)) +
@@ -667,11 +764,5 @@ class _Home2State extends State<Home2> {
                   int.parse(pResult[3].toString().substring(5, 7)))
               .toString();
     });
-
-    (pResult[0].toString().substring(5, 7) +
-            pResult[1].toString().substring(5, 7) +
-            pResult[2].toString().substring(5, 7) +
-            pResult[3].toString().substring(5, 7))
-        .toString();
   }
 } //end
