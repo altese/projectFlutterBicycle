@@ -22,6 +22,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController userNameController;
   late TextEditingController userPhoneController;
 
+  late List items;
+
   late String idCheck; // ID 중복체크
   late String userId;
 
@@ -35,6 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
     confirmPasswordController = TextEditingController();
     userNameController = TextEditingController();
     userPhoneController = TextEditingController();
+
+    items = [];
 
     idCheck = 'ID를 입력하세요.';
     userId = '';
@@ -81,7 +85,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: RawKeyboardListener(
                       focusNode: _textNode,
                       onKey: (value) {
-                        idcheck();
+                        // _fetch1();
+                        userId = getData();
                       },
                       child: TextField(
                         // onChanged: (value) {
@@ -109,34 +114,25 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  FutureBuilder(
-                      future: _fetch1(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
-                        if (snapshot.hasData == false) {
-                          return const CircularProgressIndicator();
-                        }
-                        //error가 발생하게 될 경우 반환하게 되는 부분
-                        else if (snapshot.hasError) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Error: ${snapshot.error}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          );
-                        }
-                        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                        else {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              snapshot.data.toString(),
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          );
-                        }
-                      }),
+                  // FutureBuilder(
+                  //     future: _fetch1(),
+                  //     builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  //       //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
+                  //       if (snapshot.hasData == false) {
+                  //         return const CircularProgressIndicator();
+                  //       }
+                  //       // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                  //       else {
+                  //         return Padding(
+                  //           padding: const EdgeInsets.all(8.0),
+                  //           child: Text(
+                  //             idCheck,
+                  //             style: const TextStyle(fontSize: 15),
+                  //           ),
+                  //         );
+                  //       }
+                  //     }),
+                  Text(userId),
                   const SizedBox(
                     height: 10,
                   ),
@@ -358,31 +354,79 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<String> _fetch1() async {
-    userId = FirebaseFirestore.instance
-        .collection('user')
-        .where('uId', isEqualTo: emailController.text)
+  getData() async {
+    var ID = '';
+    setState(() {
+      ID = emailController.text;
+    });
+    await FirebaseFirestore.instance
+        .collection("user")
+        .where('uId', isEqualTo: ID)
         .get()
-        // .snapshots()
-        .toString();
-    return 'Call Data';
+        .then((QuerySnapshot snapshot) {
+      for (var i in snapshot.docs) {
+        items.add(i.data());
+      }
+      // snapshot.docs.forEach(
+      //   // add data to your list
+      //   (f) => items.add(f.data()),
+      // );
+    });
+    if (items.isNotEmpty) {
+      print('userId : ' + items[0]['uId']);
+      print(items.length);
+      print(items);
+      for (int i = 0; i < items.length; i++) {
+        if (emailController.text == items[i]['uId']) {
+          print('true : ' + emailController.text == items[i]['uId']);
+          return '중복 된 아이디 입니다.';
+        } else {
+          print('false : ' + emailController.text == items[i]['uId']);
+          return '사용 가능한 아이디 입니다.';
+        }
+      }
+    }
+    // return userId;
   }
 
-  idcheck() {
-    setState(() {
-      userId = FirebaseFirestore.instance
-          .collection('user')
-          .where('uId', isEqualTo: emailController.text)
-          .get()
-          // .snapshots()
-          .toString();
-      setState(() {
-        print(emailController.text);
-        print(userId);
-        print(userId == emailController.text);
-      });
-    });
-  }
+  // Future<String> _fetch1() async {
+  //   print('OK');
+  //   userId = FirebaseFirestore.instance
+  //       .collection('user')
+  //       .where('uId', isEqualTo: 'user')
+  //       .get()
+  //       // .snapshots()
+  //       .toString();
+  //   print(userId);
+  //   setState(() {
+  //     print(emailController.text);
+  //     if (userId == emailController.text) {
+  //       idCheck = '중복 된 아이디 입니다.';
+  //     } else if (userId != emailController.text) {
+  //       idCheck = '사용 가능한 아이디 입니다.';
+  //     }
+  //   });
+  //   return idCheck;
+  // }
+
+  // idcheck() {
+  //   setState(() {
+  //     userId = FirebaseFirestore.instance
+  //         .collection('user')
+  //         .where('uId', isEqualTo: emailController.text)
+  //         .get()
+  //         // .snapshots()
+  //         .toString();
+
+  //     _fetch1();
+
+  //     setState(() {
+  //       print(emailController.text);
+  //       print(userId);
+  //       print(userId == emailController.text);
+  //     });
+  //   });
+  // }
 
   // void wrongPasswordMessage() {
   //   showDialog(
