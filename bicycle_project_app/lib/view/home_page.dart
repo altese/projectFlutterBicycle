@@ -337,6 +337,16 @@ class _HomePageState extends State<HomePage> {
     //       as String;
     // }
 
+    if (int.parse(currentbaseTime) < 0200) {
+      baseDate = '${(double.parse(formatDate(DateTime.now(), [
+                yyyy,
+                mm,
+                dd
+              ])).floor() - 1)}';
+    } else {
+      baseDate = formatDate(DateTime.now(), [yyyy, mm, dd]);
+    }
+
     baseTime = int.parse(currentbaseTime) < 0200
         ? "2300"
         : int.parse(currentbaseTime) < 0500
