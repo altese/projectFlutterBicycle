@@ -22,8 +22,19 @@ class _Home2State extends State<Home2> {
   late String humidity; // 습도
   late String windspeed; // 풍속
 
+  late String total;
+
   late List data;
   late List pbike;
+  late Map pResult;
+
+  // 테스트
+  late String r2301;
+  late String r2342;
+  late String r2348;
+  late String r2384;
+
+  late List pResult2;
   late bool checkValue;
   String result = 'all';
   // 계절
@@ -65,16 +76,19 @@ class _Home2State extends State<Home2> {
   @override
   void initState() {
     super.initState();
+    total = '';
     temp = weatherStatic.TMN.toString();
     atemp = weatherStatic.TMX.toString();
     humidity = weatherStatic.REH.toString();
     windspeed = weatherStatic.WSD.toString();
     data = [];
     pbike = [];
+    pResult2 = [];
+    pResult = {};
     checkValue = false;
     // 현재 시간 가져오기
     _toDay = DateTime.now();
-    month = '';
+    month = _toDay.month.toString();
 
     // 계절
     if (_toDay.month.toString() == '1' ||
@@ -174,6 +188,10 @@ class _Home2State extends State<Home2> {
       '28 ~ 35',
       '28 ~ 35'
     ];
+    getJSONData2301();
+    getJSONData2342();
+    getJSONData2348();
+    getJSONData2384();
   }
 
   @override
@@ -186,21 +204,29 @@ class _Home2State extends State<Home2> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 11),
-              child: Container(
-                height: 100,
-                width: 350,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.grey[200],
-                  //그림자
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.withOpacity(0.7),
-                  //     spreadRadius: 0,
-                  //     blurRadius: 2.0,
-                  //     offset: const Offset(0, 2),
-                  //   ),
-                  // ],
+              child: GestureDetector(
+                onTap: () {
+                  calc();
+                },
+                child: Container(
+                  height: 100,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey[200],
+                    //그림자
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.7),
+                    //     spreadRadius: 0,
+                    //     blurRadius: 2.0,
+                    //     offset: const Offset(0, 2),
+                    //   ),
+                    // ],
+                  ),
+                  child: Row(
+                    children: [Text(total)],
+                  ),
                 ),
               ),
             ),
@@ -217,16 +243,24 @@ class _Home2State extends State<Home2> {
                   child: Checkbox(
                     activeColor: Colors.white,
                     checkColor: Colors.black,
-                    value: checkValue,
+                    value: holiday,
                     onChanged: (value) {
                       setState(() {
-                        checkValue = value!;
+                        holiday = value!;
                       });
                     },
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        getJSONData2301();
+                        getJSONData2342();
+                        getJSONData2348();
+                        getJSONData2384();
+                      });
+                      print(pResult);
+                    },
                     child: Text('조회하기'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(118, 186, 153, 1),
@@ -389,25 +423,30 @@ class _Home2State extends State<Home2> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${mystation.snum}',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(mystation.sname),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${mystation.snum}',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(mystation.sname),
+                      ],
+                    ),
                   ),
                   SizedBox(
-                    width: 90,
+                    width: 20,
                   ),
-                  Text(
-                      '현제 대수: ${pbike[index]} \n예상 대여량: ${mystation.sexpectednum}')
+                  Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
                 ],
               ),
             ),
@@ -456,36 +495,18 @@ class _Home2State extends State<Home2> {
   }
 
   // 화면실행시 자동실행되는 예측함수
-  getJSONData2384() async {
+  getJSONData2301() async {
     if (holiday == true) {
       // 공휴일을 숫자로 변경 후 jsp로 전달
       holidayNum = 0; // 공휴일
     } else {
       holidayNum = 1; // 비공휴일
     }
-
+    print('holiday2301:${holidayNum}');
     // 날짜를 숫자로 변경 후 jsp로 전달
-    if (selectedMonth == '10월' ||
-        selectedMonth == '11월' ||
-        selectedMonth == '12월') {
-      // 10,11,12월의 경우 substring(0,1)로 하면 앞 글자 1만 출력되기 때문에 0,2로 나누어서 변경함
-      month = selectedMonth.substring(0, 2);
-    } else {
-      month = selectedMonth.substring(0, 1);
-    }
 
     var url;
-    if (StationStatic.stationNum == 2301) {
-    } else if (StationStatic.stationNum == 2384) {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    } else if (StationStatic.stationNum == 2342) {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    } else {
-      url = Uri.parse(
-          'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed.text}&season=$seasonNum&month=$month&holiday=$holidayNum');
-    }
+
     //2301=======================================
 
     url = Uri.parse(
@@ -499,17 +520,134 @@ class _Home2State extends State<Home2> {
     });
     result = clusterResult2301[int.parse(result) - 1];
 
+    setState(() {
+      pResult[0] = result;
+    });
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
-    if (StationStatic.stationNum == 2301) {
-    } else if (StationStatic.stationNum == 2384) {
-      result = clusterResult2384[int.parse(result) - 1];
-    } else if (StationStatic.stationNum == 2342) {
-      result = clusterResult2342[int.parse(result) - 1];
+    print('2301:::::::::${pResult[0]}');
+    // _showDialog(context, result);
+  }
+
+  getJSONData2342() async {
+    if (holiday == true) {
+      // 공휴일을 숫자로 변경 후 jsp로 전달
+      holidayNum = 0; // 공휴일
     } else {
-      result = clusterResult2348[int.parse(result) - 1];
+      holidayNum = 1; // 비공휴일
     }
+    print('holiday2342:${holidayNum}');
+    // 날짜를 숫자로 변경 후 jsp로 전달
+
+    var url;
+
+    url = Uri.parse(
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+
+    var response = await http.get(url);
+
+    setState(() {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      result = dataConvertedJSON['result'];
+    });
+    result = clusterResult2342[int.parse(result) - 1];
+
+    setState(() {
+      pResult[1] = result;
+    });
+    print('2342:::::::::${pResult[1]}');
+    //================================================================
+    // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
 
     // _showDialog(context, result);
+  }
+
+  getJSONData2348() async {
+    if (holiday == true) {
+      // 공휴일을 숫자로 변경 후 jsp로 전달
+      holidayNum = 0; // 공휴일
+    } else {
+      holidayNum = 1; // 비공휴일
+    }
+    print('holiday2348:${holidayNum}');
+    // 날짜를 숫자로 변경 후 jsp로 전달
+
+    var url;
+
+    url = Uri.parse(
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+
+    var response = await http.get(url);
+
+    setState(() {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      result = dataConvertedJSON['result'];
+    });
+    result = clusterResult2348[int.parse(result) - 1];
+    setState(() {
+      pResult[2] = result;
+    });
+    print('2348:::::::::${pResult[2]}');
+    //================================================================
+    // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
+
+    // _showDialog(context, result);
+  }
+
+  getJSONData2384() async {
+    if (holiday == true) {
+      // 공휴일을 숫자로 변경 후 jsp로 전달
+      holidayNum = 1; // 공휴일
+    } else {
+      holidayNum = 0; // 비공휴일
+    }
+    print('holiday2384:${holidayNum}');
+    // 날짜를 숫자로 변경 후 jsp로 전달
+
+    var url;
+
+    url = Uri.parse(
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+
+    var response = await http.get(url);
+
+    setState(() {
+      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+      result = dataConvertedJSON['result'];
+    });
+    result = clusterResult2384[int.parse(result) - 1];
+    setState(() {
+      pResult[3] = result;
+    });
+    print('2384:::::::::${pResult[3]}');
+    //================================================================
+    // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
+
+    // _showDialog(context, result);
+  }
+
+  void calc() {
+    print(pResult[1]);
+    print(pResult[1].toString().substring(0, 3));
+
+    setState(() {
+      total = (int.parse(pResult[0].toString().substring(0, 3)) +
+                  int.parse(pResult[1].toString().substring(0, 3)) +
+                  int.parse(pResult[2].toString().substring(0, 3)) +
+                  int.parse(pResult[3].toString().substring(0, 3)))
+              .toString() +
+          "~" +
+          (int.parse(pResult[0].toString().substring(5, 7)) +
+                  int.parse(pResult[1].toString().substring(5, 7)) +
+                  int.parse(pResult[2].toString().substring(5, 7)) +
+                  int.parse(pResult[3].toString().substring(5, 7)))
+              .toString();
+    });
+
+    (pResult[0].toString().substring(5, 7) +
+            pResult[1].toString().substring(5, 7) +
+            pResult[2].toString().substring(5, 7) +
+            pResult[3].toString().substring(5, 7))
+        .toString();
   }
 } //end
