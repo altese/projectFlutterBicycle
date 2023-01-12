@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -54,33 +52,37 @@ class _RegisterPageState extends State<RegisterPage> {
           scrollDirection: Axis.vertical,
           child: SafeArea(
             child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 25,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  const Icon(
+                    Icons.lock,
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Text(
+                    '지금 아이디를 만들어보세요!',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 16,
                     ),
-                    const Icon(
-                      Icons.lock,
-                      size: 50,
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      '지금 아이디를 만들어보세요!',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RawKeyboardListener(
+                      focusNode: _textNode,
+                      onKey: (value) {
+                        idcheck();
+                      },
                       child: TextField(
                         // onChanged: (value) {
                         //   idcheck();
@@ -103,143 +105,161 @@ class _RegisterPageState extends State<RegisterPage> {
                             hintStyle: TextStyle(color: Colors.grey[500])),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      width: 340,
-                      child: Text(
-                        idCheck,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    //password textfield
-                    MyTextfield(
-                      controller: passwordController,
-                      hintText: 'Password',
-                      obscureText: true,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //confirm password textfield
-                    MyTextfield(
-                      controller: confirmPasswordController,
-                      hintText: 'Confirm Password',
-                      obscureText: true,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    MyTextfield(
-                      controller: userNameController,
-                      hintText: 'Name',
-                      obscureText: false,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    MyTextfield(
-                      controller: userPhoneController,
-                      hintText: 'Phone',
-                      obscureText: false,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    MyButton(
-                      text: '회원가입',
-                      onTap: () {
-                        // signUserUp();
-                        registerAction();
-                      },
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FutureBuilder(
+                      future: _fetch1(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
+                        if (snapshot.hasData == false) {
+                          return const CircularProgressIndicator();
+                        }
+                        //error가 발생하게 될 경우 반환하게 되는 부분
+                        else if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'Or continue with',
-                              style: TextStyle(color: Colors.grey[700]),
+                              'Error: ${snapshot.error}',
+                              style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Colors.grey[400],
+                          );
+                        }
+                        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                        else {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              snapshot.data.toString(),
+                              style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        SquareTile(imagePath: 'images/googlelogo.png'),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        SquareTile(imagePath: 'images/kakao.png')
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
+                          );
+                        }
+                      }),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //password textfield
+                  MyTextfield(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                    //이미계정을 가지고있습니까?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  //confirm password textfield
+                  MyTextfield(
+                    controller: confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  MyTextfield(
+                    controller: userNameController,
+                    hintText: 'Name',
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  MyTextfield(
+                    controller: userPhoneController,
+                    hintText: 'Phone',
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  MyButton(
+                    text: '회원가입',
+                    onTap: () {
+                      // signUserUp();
+                      registerAction();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Row(
                       children: [
-                        Text(
-                          '이미 계정을 가지고 있습니까?',
-                          style: TextStyle(
-                            color: Colors.grey[700],
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[400],
                           ),
                         ),
-                        const SizedBox(
-                          width: 4,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
                         ),
-                        GestureDetector(
-                          onTap: widget.onTap,
-                          child: const Text(
-                            'Register now',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[400],
                           ),
                         ),
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      SquareTile(imagePath: 'images/googlelogo.png'),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      SquareTile(imagePath: 'images/kakao.png')
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+
+                  //이미계정을 가지고있습니까?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '이미 계정을 가지고 있습니까?',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: const Text(
+                          'Register now',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
@@ -338,15 +358,29 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future<String> _fetch1() async {
+    userId = FirebaseFirestore.instance
+        .collection('user')
+        .where('uId', isEqualTo: emailController.text)
+        .get()
+        // .snapshots()
+        .toString();
+    return 'Call Data';
+  }
+
   idcheck() {
-    print('1');
     setState(() {
       userId = FirebaseFirestore.instance
           .collection('user')
           .where('uId', isEqualTo: emailController.text)
-          .snapshots()
+          .get()
+          // .snapshots()
           .toString();
-      print(userId);
+      setState(() {
+        print(emailController.text);
+        print(userId);
+        print(userId == emailController.text);
+      });
     });
   }
 
