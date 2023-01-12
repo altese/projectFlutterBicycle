@@ -27,7 +27,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     baseDate = formatDate(DateTime.now(), [yyyy, mm, dd]);
     labelDate = formatDate(DateTime.now(), [yyyy, '년', mm, '월', dd, '일']);
-    currentbaseTime = formatDate(DateTime.now(), [hh, mm]);
+    currentbaseTime = formatDate(DateTime.now(), [HH, mm]);
+    // print('currentTime: $currentbaseTime');
     selectWeather = {};
 
     getJSONData(baseDate);
@@ -188,8 +189,10 @@ class _HomePageState extends State<HomePage> {
   Future<String> getJSONData(String baseDate) async {
     String baseTime;
 
-    print('hour: ${DateTime.now().hour}');
-    print('minute: ${DateTime.now().minute}');
+    // print('hour: ${DateTime.now().hour}');
+    // print('minute: ${DateTime.now().minute}');
+
+    // print('currentTime: $currentbaseTime');
 
     // if (DateTime.now().hour <= 0200) {
     //   // 0200시 이전이라면 전날이어야함
