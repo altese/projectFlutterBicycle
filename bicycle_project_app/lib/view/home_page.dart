@@ -222,17 +222,11 @@ class _HomePageState extends State<HomePage> {
     print('baseTime: $baseTime');
     print('baseDate: $baseDate');
     var url = Uri.parse(
-        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=55&ny=127');
+        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=61&ny=126');
     var response = await http.get(url);
     var dataConvertedToJSON = json.decode(response.body);
 
-    // print('body: ${response.body}');
-
     List result = dataConvertedToJSON["response"]["body"]["items"]["item"];
-
-    // print(result);
-
-    // weatherTime();
 
     Map<String, dynamic> jsonToMap;
 
@@ -274,7 +268,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    print(selectWeather);
+    print('---------- selectWeather: ${selectWeather} -------- \n');
 
     // static에 필요한 데이터 저장
     weatherStatic.REH = double.parse(selectWeather["REH"]['fcstValue']);
