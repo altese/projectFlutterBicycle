@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:bicycle_project_app/Model/station_static.dart';
-import 'package:bicycle_project_app/Model/weather_static.dart';
+import 'package:bicycle_project_app/model/station_static.dart';
+import 'package:bicycle_project_app/model/weather_static.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
