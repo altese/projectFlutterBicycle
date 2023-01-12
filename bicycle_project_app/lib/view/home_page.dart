@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bicycle_project_app/Model/station_static.dart';
+import 'package:bicycle_project_app/Model/usestatus.dart';
 import 'package:bicycle_project_app/Model/weather_static.dart';
+import 'package:bicycle_project_app/view/utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +27,53 @@ class _HomePageState extends State<HomePage> {
   late String next2;
   late String next3;
   late String next4;
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOff; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  int dialogCnt = 0;
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+        _rangeStart = null; // Important to clean those
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+
+        if (!isSameDay(selectedDay, DateTime.now()) &&
+            (DateTime.now().compareTo(selectedDay) > 0)) {
+          StationStatic.clickedDay = selectedDay.toString().substring(0, 10);
+          getJSONDataDaily();
+          Future.delayed(Duration(seconds: 1));
+          getJSONDataDaily2();
+          Future.delayed(Duration(seconds: 1));
+          getJSONDataDaily3();
+          dialogCnt = 0;
+        } else {
+          StationStatic.rent2301 = "";
+          StationStatic.return2301 = "";
+          StationStatic.rent2342 = "";
+          StationStatic.return2342 = "";
+          StationStatic.rent2348 = "";
+          StationStatic.return2348 = "";
+          StationStatic.rent2384 = "";
+          StationStatic.return2384 = "";
+        }
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -30,7 +83,9 @@ class _HomePageState extends State<HomePage> {
     currentbaseTime = formatDate(DateTime.now(), [HH, mm]);
     // print('currentTime: $currentbaseTime');
     selectWeather = {};
+    initializeDateFormatting('ko_KR', null);
 
+    _selectedDay = _focusedDay;
     getJSONData(baseDate);
     // });
   }
@@ -38,143 +93,230 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: getJSONData(baseDate),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        labelDate,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 200,
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 0,
-                        blurRadius: 2.0,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Column(
+      body: Column(
+        children: [
+          FutureBuilder(
+            future: getJSONData(baseDate),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                int.parse(selectWeather["SKY"]['fcstValue']) < 5
-                                    ? const Icon(
-                                        Icons.sunny,
-                                        size: 100,
-                                        color: Color(0xffFFDE00),
-                                      )
-                                    : int.parse(selectWeather["SKY"]
-                                                ['fcstValue']) <
-                                            8
-                                        ? const Icon(
-                                            Icons.cloud,
-                                            size: 100,
-                                            color: Color(0xff3C79F5),
-                                          )
-                                        : const Icon(
-                                            Icons.cloudy_snowing,
-                                            size: 100,
-                                            color: Color(0xff3C79F5),
-                                          ),
-                                Text(
-                                  '${selectWeather["TMP"]['fcstValue']}°',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 50,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                          Text(
+                            labelDate,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                int.parse(selectWeather["SKY"]['fcstValue']) < 5
-                                    ? '맑음'
-                                    : int.parse(selectWeather["SKY"]
-                                                ['fcstValue']) <
-                                            8
-                                        ? '구름 많음'
-                                        : '흐림',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('최고 '),
-                              Text(
-                                '${selectWeather["TMX"]['fcstValue']}° ',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const Text('최저 '),
-                              Text(
-                                '${selectWeather["TMN"]['fcstValue']}° ',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const Text('풍속 '),
-                              Text(
-                                '${selectWeather["WSD"]['fcstValue']}m/s ',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const Text('강수 확률 '),
-                              Text(
-                                '${selectWeather["POP"]['fcstValue']}% ',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
                           )
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+                    Container(
+                      height: 200,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 0,
+                            blurRadius: 2.0,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    int.parse(selectWeather["SKY"]
+                                                ['fcstValue']) <
+                                            5
+                                        ? const Icon(
+                                            Icons.sunny,
+                                            size: 100,
+                                            color: Color(0xffFFDE00),
+                                          )
+                                        : int.parse(selectWeather["SKY"]
+                                                    ['fcstValue']) <
+                                                8
+                                            ? const Icon(
+                                                Icons.cloud,
+                                                size: 100,
+                                                color: Color(0xff3C79F5),
+                                              )
+                                            : const Icon(
+                                                Icons.cloudy_snowing,
+                                                size: 100,
+                                                color: Color(0xff3C79F5),
+                                              ),
+                                    Text(
+                                      '${selectWeather["TMP"]['fcstValue']}°',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 50,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    int.parse(selectWeather["SKY"]
+                                                ['fcstValue']) <
+                                            5
+                                        ? '맑음'
+                                        : int.parse(selectWeather["SKY"]
+                                                    ['fcstValue']) <
+                                                8
+                                            ? '구름 많음'
+                                            : '흐림',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text('최고 '),
+                                  Text(
+                                    '${selectWeather["TMX"]['fcstValue']}° ',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text('최저 '),
+                                  Text(
+                                    '${selectWeather["TMN"]['fcstValue']}° ',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text('풍속 '),
+                                  Text(
+                                    '${selectWeather["WSD"]['fcstValue']}m/s ',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text('강수 확률 '),
+                                  Text(
+                                    '${selectWeather["POP"]['fcstValue']}% ',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          TableCalendar<Event>(
+            locale: 'ko_KR',
+            firstDay: kFirstDay,
+            lastDay: kLastDay,
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            calendarFormat: _calendarFormat,
+            rangeSelectionMode: _rangeSelectionMode,
+            startingDayOfWeek: StartingDayOfWeek.sunday,
+            calendarStyle: CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
+            onDaySelected: _onDaySelected,
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              titleTextFormatter: (date, locale) =>
+                  DateFormat.yMMMMd(locale).format(date),
+              formatButtonVisible: false,
+              titleTextStyle: const TextStyle(
+                fontSize: 20.0,
+                color: Colors.blue,
+              ),
+              headerPadding: const EdgeInsets.symmetric(vertical: 4.0),
+              leftChevronIcon: const Icon(Icons.arrow_left, size: 40.0),
+              rightChevronIcon: const Icon(Icons.arrow_right, size: 40.0),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('2301 대여량 : ' +
+                  StationStatic.rent2301 +
+                  ' 반납량 :' +
+                  StationStatic.return2301 +
+                  '\n'),
+              SizedBox(
+                width: 20,
+              ),
+              Text('2342 대여량 : ' +
+                  StationStatic.rent2342 +
+                  ' 반납량 :' +
+                  StationStatic.return2342 +
+                  '\n'),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('2348 대여량 : ' +
+                  StationStatic.rent2348 +
+                  ' 반납량 :' +
+                  StationStatic.return2348 +
+                  '\n'),
+              SizedBox(
+                width: 20,
+              ),
+              Text('2384 대여량 : ' +
+                  StationStatic.rent2384 +
+                  ' 반납량 :' +
+                  StationStatic.return2384 +
+                  '\n'),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -277,5 +419,198 @@ class _HomePageState extends State<HomePage> {
     weatherStatic.WSD = double.parse(selectWeather["WSD"]['fcstValue']);
 
     return "success";
+  }
+
+// Function
+  Future<bool> getJSONDataDaily() async {
+    var url = Uri.parse(
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1/1000/${StationStatic.clickedDay}');
+    var response = await http.get(url);
+    print(response.body);
+    var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    if (dateConvertedJSON['CODE'] == 'INFO-200') {
+      _showDialog(context);
+      StationStatic.rent2301 = "";
+      StationStatic.return2301 = "";
+      StationStatic.rent2342 = "";
+      StationStatic.return2342 = "";
+      StationStatic.rent2348 = "";
+      StationStatic.return2348 = "";
+      StationStatic.rent2384 = "";
+      StationStatic.return2384 = "";
+      return false;
+    }
+    dynamic result = dateConvertedJSON['useStatus']['row']
+        .cast<Map<String, dynamic>>()
+        .map<UseStatus>((json) => UseStatus.fromJson(json))
+        .toList();
+    for (int i = 0; i < result.length; i++) {
+      if (result[i].rent_nm == "2301. 현대고등학교 건너편") {
+        setState(() {
+          StationStatic.rent2301 = result[i].rent_cnt;
+          StationStatic.return2301 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2342. 대청역 1번출구  뒤") {
+        setState(() {
+          StationStatic.rent2342 = result[i].rent_cnt;
+          StationStatic.return2342 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2348. 포스코사거리(기업은행)") {
+        setState(() {
+          StationStatic.rent2348 = result[i].rent_cnt;
+          StationStatic.return2348 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2384. 자곡사거리") {
+        setState(() {
+          StationStatic.rent2384 = result[i].rent_cnt;
+          StationStatic.return2384 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      }
+    }
+    return true;
+  }
+
+  Future<bool> getJSONDataDaily2() async {
+    var url = Uri.parse(
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1001/2000/${StationStatic.clickedDay}');
+    var response = await http.get(url);
+    var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    if (dateConvertedJSON['CODE'] == 'INFO-200') {
+      _showDialog(context);
+      StationStatic.rent2301 = "";
+      StationStatic.return2301 = "";
+      StationStatic.rent2342 = "";
+      StationStatic.return2342 = "";
+      StationStatic.rent2348 = "";
+      StationStatic.return2348 = "";
+      StationStatic.rent2384 = "";
+      StationStatic.return2384 = "";
+
+      return false;
+    }
+    dynamic result = dateConvertedJSON['useStatus']['row']
+        .cast<Map<String, dynamic>>()
+        .map<UseStatus>((json) => UseStatus.fromJson(json))
+        .toList();
+    for (int i = 0; i < result.length; i++) {
+      if (result[i].rent_nm == "2301. 현대고등학교 건너편") {
+        setState(() {
+          StationStatic.rent2301 = result[i].rent_cnt;
+          StationStatic.return2301 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2342. 대청역 1번출구  뒤") {
+        setState(() {
+          StationStatic.rent2342 = result[i].rent_cnt;
+          StationStatic.return2342 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2348. 포스코사거리(기업은행)") {
+        setState(() {
+          StationStatic.rent2348 = result[i].rent_cnt;
+          StationStatic.return2348 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2384. 자곡사거리") {
+        setState(() {
+          StationStatic.rent2384 = result[i].rent_cnt;
+          StationStatic.return2384 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      }
+    }
+    return true;
+  }
+
+  Future<bool> getJSONDataDaily3() async {
+    var url = Uri.parse(
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/2001/2682/${StationStatic.clickedDay}');
+    var response = await http.get(url);
+    var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    if (dateConvertedJSON['CODE'] == 'INFO-200') {
+      _showDialog(context);
+      StationStatic.rent2301 = "";
+      StationStatic.return2301 = "";
+      StationStatic.rent2342 = "";
+      StationStatic.return2342 = "";
+      StationStatic.rent2348 = "";
+      StationStatic.return2348 = "";
+      StationStatic.rent2384 = "";
+      StationStatic.return2384 = "";
+      return false;
+    }
+    dynamic result = dateConvertedJSON['useStatus']['row']
+        .cast<Map<String, dynamic>>()
+        .map<UseStatus>((json) => UseStatus.fromJson(json))
+        .toList();
+    for (int i = 0; i < result.length; i++) {
+      if (result[i].rent_nm == "2301. 현대고등학교 건너편") {
+        setState(() {
+          StationStatic.rent2301 = result[i].rent_cnt;
+          StationStatic.return2301 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2342. 대청역 1번출구  뒤") {
+        setState(() {
+          StationStatic.rent2342 = result[i].rent_cnt;
+          StationStatic.return2342 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2348. 포스코사거리(기업은행)") {
+        setState(() {
+          StationStatic.rent2348 = result[i].rent_cnt;
+          StationStatic.return2348 = result[i].rtn_cnt;
+        });
+        print(result[i].rent_nm);
+      } else if (result[i].rent_nm == "2384. 자곡사거리") {
+        setState(() {
+          StationStatic.rent2384 = result[i].rent_cnt;
+          StationStatic.return2384 = result[i].rtn_cnt;
+        });
+
+        print(result[i].rent_nm);
+      }
+    }
+    return true;
+  }
+
+  _showDialog(BuildContext context) {
+    if (dialogCnt == 0) {
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            content: const Text('확인 불가능'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('대여량과 반납량이 확인되지 않습니다.'),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text(
+                      '확인',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
+        },
+      );
+      dialogCnt = 1;
+    }
   }
 } //END

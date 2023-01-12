@@ -134,7 +134,7 @@ class _Home2State extends State<Home2> {
                     width: 90,
                   ),
                   Text(
-                      '현제 대수: ${mystation.sparkednum} \n예상 대여량: ${mystation.sexpectednum}')
+                      '현재 대수: ${mystation.sparkednum} \n예상 대여량: ${mystation.sexpectednum}')
                 ],
               ),
             ),
