@@ -5,7 +5,7 @@ import 'package:bicycle_project_app/view/home_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'home2.dart';
-import 'home4.dart';
+import 'my_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,7 +26,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     //바텀 바 아이콘
-    List pages = const [HomePage(), SimpleMap(), Home2(), ChartPage(), Home4()];
+    List pages = const [
+      HomePage(),
+      SimpleMap(),
+      Home2(),
+      ChartPage(),
+      MyPage()
+    ];
     final items = [
       const Icon(Icons.home, size: 30),
       const Icon(Icons.map_rounded, size: 30),
