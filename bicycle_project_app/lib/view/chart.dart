@@ -56,7 +56,13 @@ class _ChartState extends State<Chart> {
               ),
               child: LineChart(
                 // showAvg가 true면 avgData(), false면 mainData() 호출
-                widget.station == "2301" ? avgData() : mainData(),
+                widget.station == "2301"
+                    ? chart2301()
+                    : widget.station == "2342"
+                        ? chart2342()
+                        : widget.station == "2348"
+                            ? chart2348()
+                            : chart2384(),
               ),
             ),
           ),
@@ -138,10 +144,8 @@ class _ChartState extends State<Chart> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  // 처음으로 보여줄 차트 2301
-  LineChartData mainData() {
-    print(Rent.rentCounts);
-
+  // ===================================================================== chart 2301
+  LineChartData chart2301() {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -234,10 +238,8 @@ class _ChartState extends State<Chart> {
     );
   }
 
-  // 버튼 누르면 보여줄 차트
-  LineChartData avgData() {
-    print(Rent.rentCounts);
-
+  // ===================================================================== chart 2342
+  LineChartData chart2342() {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -307,6 +309,194 @@ class _ChartState extends State<Chart> {
             FlSpot(10, double.parse(Rent.rentCounts[21]['rcount'])),
             FlSpot(11, double.parse(Rent.rentCounts[22]['rcount'])),
             FlSpot(12, double.parse(Rent.rentCounts[23]['rcount'])),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ===================================================================== chart 2342
+  LineChartData chart2348() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color.fromARGB(255, 202, 202, 202),
+            // strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color.fromARGB(255, 218, 218, 218),
+            // strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(
+            color: const Color.fromARGB(255, 202, 202, 202),
+          )),
+      minX: 1,
+      maxX: 12,
+      minY: 0,
+      maxY: 6000,
+      lineBarsData: [
+        // -------------------------------------------------------- 데이터 넣는 곳!
+        LineChartBarData(
+          spots: [
+            FlSpot(1, double.parse(Rent.rentCounts[24]['rcount'])),
+            FlSpot(2, double.parse(Rent.rentCounts[25]['rcount'])),
+            FlSpot(3, double.parse(Rent.rentCounts[26]['rcount'])),
+            FlSpot(4, double.parse(Rent.rentCounts[27]['rcount'])),
+            FlSpot(5, double.parse(Rent.rentCounts[28]['rcount'])),
+            FlSpot(6, double.parse(Rent.rentCounts[29]['rcount'])),
+            FlSpot(7, double.parse(Rent.rentCounts[30]['rcount'])),
+            FlSpot(8, double.parse(Rent.rentCounts[31]['rcount'])),
+            FlSpot(9, double.parse(Rent.rentCounts[32]['rcount'])),
+            FlSpot(10, double.parse(Rent.rentCounts[33]['rcount'])),
+            FlSpot(11, double.parse(Rent.rentCounts[34]['rcount'])),
+            FlSpot(12, double.parse(Rent.rentCounts[35]['rcount'])),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ===================================================================== chart 2348
+  LineChartData chart2384() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color.fromARGB(255, 202, 202, 202),
+            // strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color.fromARGB(255, 218, 218, 218),
+            // strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(
+            color: const Color.fromARGB(255, 202, 202, 202),
+          )),
+      minX: 1,
+      maxX: 12,
+      minY: 0,
+      maxY: 6000,
+      lineBarsData: [
+        // -------------------------------------------------------- 데이터 넣는 곳!
+        LineChartBarData(
+          spots: [
+            FlSpot(1, double.parse(Rent.rentCounts[36]['rcount'])),
+            FlSpot(2, double.parse(Rent.rentCounts[37]['rcount'])),
+            FlSpot(3, double.parse(Rent.rentCounts[38]['rcount'])),
+            FlSpot(4, double.parse(Rent.rentCounts[39]['rcount'])),
+            FlSpot(5, double.parse(Rent.rentCounts[40]['rcount'])),
+            FlSpot(6, double.parse(Rent.rentCounts[41]['rcount'])),
+            FlSpot(7, double.parse(Rent.rentCounts[42]['rcount'])),
+            FlSpot(8, double.parse(Rent.rentCounts[43]['rcount'])),
+            FlSpot(9, double.parse(Rent.rentCounts[44]['rcount'])),
+            FlSpot(10, double.parse(Rent.rentCounts[45]['rcount'])),
+            FlSpot(11, double.parse(Rent.rentCounts[46]['rcount'])),
+            FlSpot(12, double.parse(Rent.rentCounts[47]['rcount'])),
           ],
           isCurved: true,
           gradient: LinearGradient(
