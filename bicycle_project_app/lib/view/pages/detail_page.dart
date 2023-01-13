@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:bicycle_project_app/model/message.dart';
+import 'package:bicycle_project_app/view/component/chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+
+import '../../Model/rent.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -192,14 +197,18 @@ class _DetailPageState extends State<DetailPage>
               child: TabBarView(
                 controller: controller,
                 children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey[200],
-                    ),
+                  //=================================탭바의 차트
+                  FutureBuilder(
+                    future: getJSONData(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return Chart(station: snum);
+                      } else {
+                        return const Center();
+                      }
+                    },
                   ),
+                  //==================================탭바의 지도
                   Container(
                     height: 50,
                     width: 50,
@@ -207,13 +216,17 @@ class _DetailPageState extends State<DetailPage>
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.grey[200],
                     ),
-                    child: GoogleMap(
-                      initialCameraPosition: _kInitialPosition,
-                      onMapCreated: onMapCreated,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      mapType: MapType.normal,
-                      markers: Set.from(_markers),
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: GoogleMap(
+                        initialCameraPosition: _kInitialPosition,
+                        onMapCreated: onMapCreated,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        mapType: MapType.normal,
+                        markers: Set.from(_markers),
+                      ),
                     ),
                   ),
                 ],
@@ -223,5 +236,25 @@ class _DetailPageState extends State<DetailPage>
         ),
       ),
     );
+  }
+
+  Future<bool> getJSONData() async {
+    var url = Uri.parse('http://localhost:8080/Flutter/rent_select_query.jsp');
+    var response = await http.get(url);
+
+    Rent.rentCounts.clear();
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List result = dataConvertedJSON['results'];
+
+    // print('---------------------');
+    // print('body: ${result}\n');
+    // print('---------------------');
+    // print('${result[0]['rcount']}');
+    // setState(() {
+    Rent.rentCounts.addAll(result);
+    // Rent.fromMap(result);
+    // });
+    print('rcount: ${Rent.rentCounts[0]['rcount']}');
+    return true;
   }
 }
