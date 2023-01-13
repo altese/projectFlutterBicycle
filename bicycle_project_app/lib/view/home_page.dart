@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bicycle_project_app/Model/station_static.dart';
 import 'package:bicycle_project_app/Model/usestatus.dart';
 import 'package:bicycle_project_app/Model/weather_static.dart';
-import 'package:bicycle_project_app/main.dart';
 import 'package:bicycle_project_app/view/utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
