@@ -50,9 +50,9 @@ class _HomePageState extends State<HomePage> {
             (DateTime.now().compareTo(selectedDay) > 0)) {
           StationStatic.clickedDay = selectedDay.toString().substring(0, 10);
           getJSONDataDaily();
-          Future.delayed(Duration(seconds: 1));
+          Future.delayed(const Duration(seconds: 1));
           getJSONDataDaily2();
-          Future.delayed(Duration(seconds: 1));
+          Future.delayed(const Duration(seconds: 1));
           getJSONDataDaily3();
           dialogCnt = 0;
         } else {
@@ -210,18 +210,18 @@ class _HomePageState extends State<HomePage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // const Text('최고 '),
-                                    // Text(
-                                    //   '${selectWeather["TMX"]['fcstValue']}° ',
-                                    //   style: const TextStyle(
-                                    //       fontWeight: FontWeight.bold),
-                                    // ),
-                                    // const Text('최저 '),
-                                    // Text(
-                                    //   '${selectWeather["TMN"]['fcstValue']}° ',
-                                    //   style: const TextStyle(
-                                    //       fontWeight: FontWeight.bold),
-                                    // ),
+                                    const Text('최고 '),
+                                    Text(
+                                      '${selectWeather["TMX"]['fcstValue']}° ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text('최저 '),
+                                    Text(
+                                      '${selectWeather["TMN"]['fcstValue']}° ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     const Text('풍속 '),
                                     Text(
                                       '${selectWeather["WSD"]['fcstValue']}m/s ',
@@ -363,8 +363,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // 날씨 api
   Future<String> getJSONData(String baseDate) async {
     String baseTime;
+    String fcstTime;
 
     if (int.parse(currentbaseTime) < 0200) {
       baseDate = '${(double.parse(formatDate(DateTime.now(), [
@@ -391,13 +393,15 @@ class _HomePageState extends State<HomePage> {
                             : int.parse(currentbaseTime) < 2000
                                 ? "1700"
                                 : "2000";
+
+    fcstTime = '${(int.parse(baseTime) + 100)}';
     var key =
         'EKnVo4X9GAgmVw7dZkmP2uWXbE8dizew4hMPJ5t5L8%2B8%2BIGgBT19eADTmIO2qNJNWEyD8WNghSJbez97er%2FMlw%3D%3D';
 
     print('baseTime: $baseTime');
     print('baseDate: $baseDate');
     var url = Uri.parse(
-        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=61&ny=126');
+        'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=$key&pageNo=1&numOfRows=1000&dataType=JSON&base_date=20230112&base_time=$baseTime&nx=61&ny=126');
     var response = await http.get(url);
     var dataConvertedToJSON = json.decode(response.body);
 
@@ -408,23 +412,24 @@ class _HomePageState extends State<HomePage> {
     for (var e in result) {
       jsonToMap = Map<String, dynamic>.from(e);
 
-      if (jsonToMap.values.contains("POP") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("60")) {
+      if (jsonToMap["category"] == "POP" &&
+          jsonToMap["fcstDate"] == baseDate &&
+          jsonToMap["fcstTime"] == fcstTime) {
         selectWeather["POP"] = jsonToMap;
       }
-      if (jsonToMap.values.contains("TMN") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0.0")) {
+      if (jsonToMap["category"] == "TMN" &&
+          jsonToMap["fcstDate"] == baseDate &&
+          jsonToMap["baseTime"] == baseTime) {
         selectWeather["TMN"] = jsonToMap;
       }
-      if (jsonToMap.values.contains("TMX") &&
-          jsonToMap.values.contains(baseDate)) {
+      if (jsonToMap["category"] == "TMX" &&
+          jsonToMap["fcstDate"] == baseDate &&
+          jsonToMap["fcstTime"] == fcstTime) {
         selectWeather["TMX"] = jsonToMap;
       }
-      if (jsonToMap.values.contains("TMP") &&
-          jsonToMap.values.contains("0900") &&
-          jsonToMap.values.contains("7")) {
+      if (jsonToMap["category"] == "TMP" &&
+          jsonToMap["fcstDate"] == baseDate &&
+          jsonToMap["fcstTime"] == fcstTime) {
         selectWeather["TMP"] = jsonToMap;
       }
       if (jsonToMap.values.contains("REH") &&
@@ -625,7 +630,7 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('대여량과 반납량이 확인되지 않습니다.'),
+                  const Text('대여량과 반납량이 확인되지 않습니다.'),
                   TextButton(
                     onPressed: () {
                       Navigator.of(ctx).pop();
