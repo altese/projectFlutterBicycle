@@ -450,6 +450,8 @@ class _Home2State extends State<Home2> {
             Message.snum = doc['snum'];
             Message.sparkednum = doc['sparkednum'];
             Message.sexpectednum = doc['sexpectednum'];
+            Message.pbike = pbike[index];
+            Message.presult = pResult[index];
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -645,6 +647,7 @@ class _Home2State extends State<Home2> {
 
     // setState(() {
     pResult[0] = result;
+
     // });
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함

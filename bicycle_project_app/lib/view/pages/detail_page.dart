@@ -25,6 +25,8 @@ class _DetailPageState extends State<DetailPage>
   late String sparkednum;
   late String sexpectednum;
   late String sname;
+  late String pbike;
+  late String presult;
   static const LatLng _kMapCenter = LatLng(37.514575, 127.0495556);
 
   static const CameraPosition _kInitialPosition =
@@ -47,6 +49,8 @@ class _DetailPageState extends State<DetailPage>
     sparkednum = Message.sparkednum;
     sexpectednum = Message.sexpectednum;
     sname = Message.sname;
+    pbike = Message.pbike;
+    presult = Message.presult;
     _markers = [];
   }
 
@@ -107,8 +111,8 @@ class _DetailPageState extends State<DetailPage>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
                     child: Text(
-                      '32대',
-                      style: TextStyle(fontSize: 27),
+                      '${presult}대',
+                      style: TextStyle(fontSize: 25),
                     ),
                   )
                 ],
@@ -138,8 +142,8 @@ class _DetailPageState extends State<DetailPage>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
                     child: Text(
-                      '32대',
-                      style: TextStyle(fontSize: 27),
+                      '${pbike}대',
+                      style: TextStyle(fontSize: 25),
                     ),
                   )
                 ],
@@ -149,33 +153,33 @@ class _DetailPageState extends State<DetailPage>
               height: 10,
             ),
             //===============================================
-            Container(
-              height: 80,
-              width: 350,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey[200],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
-                    child: Text(
-                      '어제 대여량',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
-                    child: Text(
-                      '32대',
-                      style: TextStyle(fontSize: 27),
-                    ),
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   height: 80,
+            //   width: 350,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(15),
+            //     color: Colors.grey[200],
+            //   ),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Padding(
+            //         padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+            //         child: Text(
+            //           '어제 대여량',
+            //           style: TextStyle(fontSize: 18),
+            //         ),
+            //       ),
+            //       Padding(
+            //         padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
+            //         child: Text(
+            //           '32대',
+            //           style: TextStyle(fontSize: 25),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
             TabBar(
               controller: controller,
               tabs: const [
@@ -198,16 +202,20 @@ class _DetailPageState extends State<DetailPage>
                 controller: controller,
                 children: [
                   //=================================탭바의 차트
-                  FutureBuilder(
-                    future: getJSONData(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        return Chart(station: snum);
-                      } else {
-                        return const Center();
-                      }
-                    },
-                  ),
+                  Container(
+                      // height: 50,
+                      // width: 50,
+                      // child: FutureBuilder(
+                      //   future: getJSONData(),
+                      //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       return Chart(station: snum);
+                      //     } else {
+                      //       return const Center();
+                      //     }
+                      //   },
+                      // ),
+                      ),
                   //==================================탭바의 지도
                   Container(
                     height: 50,
