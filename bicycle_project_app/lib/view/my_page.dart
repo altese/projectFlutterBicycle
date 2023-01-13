@@ -26,7 +26,7 @@ class _MyPageState extends State<MyPage> {
               switch (position) {
                 // 정보수정 클릭
                 case 0:
-                  //
+                  Navigator.pushNamed(context, '/userInfoUpdate');
                   break;
                 // 로그아웃 클릭
                 case 1:

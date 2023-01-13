@@ -1,4 +1,5 @@
 import 'package:bicycle_project_app/Model/userRegisterStatic.dart';
+import 'package:bicycle_project_app/view/pages/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -242,8 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyButton(
                     text: '회원가입',
                     onTap: () {
-                      // signUserUp();
-                      registerNullCheck();
+                      signUserUp();
                     },
                   ),
                   const SizedBox(
@@ -325,33 +325,27 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-//---function
+
+  // --- Functions
 
   void signUserUp() async {
-    //로딩화면
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
     //유저생성
     try {
       //비밀번호와 비밀번호 확인이 같은지 체크
       if (passwordController.text == confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
+        registerNullCheck();
       } else {
         //에러메시지
         showErrorMessage('비밀번호가 일치하지 않습니다!');
       }
 
-      Navigator.pop(context);
+      // Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // 로딩화면끄기
-      Navigator.pop(context);
+      // Navigator.pop(context);
+
       // Wrong email
       if (e.code == 'user-not-found') {
         // 없는계정
@@ -361,6 +355,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showErrorMessage('패스워드가 일치하지 않습니다');
       }
     }
+    // await registerAction();
   }
 
   // --- Functions
@@ -400,19 +395,24 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // firebase database에 유저 정보 등록 (회원가입)
   registerAction() {
-    if (userRegisterStatic.idCheck == 1 && userRegisterStatic.pwCheck == 1) {
-      FirebaseFirestore.instance.collection('user').add({
-        'uId': emailController.text,
-        'uPassword': passwordController.text,
-        'uName': userNameController.text,
-        'uPhone': userPhoneController.text
-      });
-    } else if (userRegisterStatic.idCheck == 0) {
+    if (userInfo.idCheck == 1 && userInfo.pwCheck == 1) {
+      FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .set(
+        {
+          'uId': emailController.text,
+          'uPassword': passwordController.text,
+          'uName': userNameController.text,
+          'uPhone': userPhoneController.text
+        },
+      );
+      // _showDialog(context);
+    } else if (userInfo.idCheck == 0) {
       showSnackBar('중복 된 아이디 입니다.\n다른 아이디를 입력하세요.');
     } else {
       showSnackBar('패스워드가 일치하지 않습니다.\n패스워드를 동일하게 입력하세요.');
     }
-    _showDialog(context);
   }
 
   showSnackBar(String result) {
@@ -430,28 +430,29 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('회원가입'),
-          content: const Text('회원가입이 완료 되었습니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'OK',
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // _showDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('회원가입'),
+  //         content: const Text('회원가입이 완료 되었습니다.'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pushNamed(context, '/loginPage');
+  //               // Navigator.of(context).pop();
+  //               Navigator.pop(context);
+  //             },
+  //             child: const Text(
+  //               'OK',
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
 // ID 중복체크
   getData() async {
@@ -474,20 +475,20 @@ class _RegisterPageState extends State<RegisterPage> {
           if (emailController.text == items[i]['uId']) {
             items.removeAt(0);
             idCheck = '중복 된 아이디 입니다.';
-            userRegisterStatic.idCheck = 0;
+            userInfo.idCheck = 0;
           } else {
             idCheck = '사용 가능한 아이디 입니다.';
-            userRegisterStatic.idCheck = 1;
+            userInfo.idCheck = 1;
           }
         }
       } else {
         idCheck = '사용 가능한 아이디 입니다.';
-        userRegisterStatic.idCheck = 1;
+        userInfo.idCheck = 1;
       }
 
       if (emailController.text.isEmpty) {
         idCheck = 'ID를 입력하세요.';
-        userRegisterStatic.idCheck = 0;
+        userInfo.idCheck = 0;
       }
     });
   }
@@ -496,15 +497,15 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       if (passwordController.text != confirmPasswordController.text) {
         pwCheck = '패스워드가 일치하지 않습니다.';
-        userRegisterStatic.pwCheck = 0;
+        userInfo.pwCheck = 0;
       } else {
         pwCheck = '패스워드가 일치합니다.';
-        userRegisterStatic.pwCheck = 1;
+        userInfo.pwCheck = 1;
       }
       if (passwordController.text.isEmpty &&
           confirmPasswordController.text.isEmpty) {
         pwCheck = '패스워드를 입력하세요.';
-        userRegisterStatic.pwCheck = 0;
+        userInfo.pwCheck = 0;
       }
     });
   }

@@ -58,15 +58,6 @@ class _SimpleMapState extends State<SimpleMap> {
 
     _toDay = DateTime.now();
 
-    // getJSONData();
-
-    // for (int i = 0; i <= latitude.length; i++) {
-    //   _markers.add(Marker(
-    //       markerId: const MarkerId("1"),
-    //       draggable: true,
-    //       onTap: () => print("Marker!"),
-    //       position: LatLng(latitude[i], 127.0495556)));
-
     _markers.add(Marker(
         markerId: const MarkerId("1"),
         draggable: true,
@@ -182,8 +173,6 @@ class _SimpleMapState extends State<SimpleMap> {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.latitude);
-    print(position.longitude);
     return position;
   }
 
@@ -205,7 +194,7 @@ class _SimpleMapState extends State<SimpleMap> {
                 ),
               ),
               Container(
-                  height: 130,
+                  height: 180,
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -288,43 +277,9 @@ class _SimpleMapState extends State<SimpleMap> {
       );
     });
 
-    navigator!.pop();
+    Navigator.pop(context);
   }
 
-  // --- Function ---
-  // Future<bool> getJSONData() async {
-  //   var url = Uri.parse(
-  //       'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1536/1606/');
-  //   var response = await http.get(url);
-  //   var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-
-  //   List result = dateConvertedJSON['rentBikeStatus']['row'];
-
-  //   setState(() {
-  //     data.addAll(result);
-  //   });
-  //   StationStatic.parking2301 = data[0]['parkingBikeTotCnt'];
-  //   StationStatic.parking2342 = data[38]['parkingBikeTotCnt'];
-  //   StationStatic.parking2348 = data[42]['parkingBikeTotCnt'];
-  //   StationStatic.parking2384 = data[70]['parkingBikeTotCnt'];
-
-  //   print("——————————————————————————");
-  //   print(data[0]['stationName']);
-  //   print("ParkingBiketoCount : " + data[0]['parkingBikeTotCnt']);
-  //   print(StationStatic.parking2301);
-  //   print(data[38]['stationName']);
-  //   print("ParkingBiketoCount : " + data[38]['parkingBikeTotCnt']);
-  //   print(StationStatic.parking2342);
-  //   print(data[42]['stationName']);
-  //   print("ParkingBiketoCount : " + data[42]['parkingBikeTotCnt']);
-  //   print(StationStatic.parking2348);
-  //   print(data[70]['stationName']);
-  //   print("ParkingBiketoCount : " + data[70]['parkingBikeTotCnt']);
-  //   print(StationStatic.parking2384);
-  //   return true;
-
-  //   return true;
-  // }
   Future<bool> getJSONData() async {
     var url = Uri.parse(
         'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/bikeList/1530/1610/');
@@ -332,11 +287,12 @@ class _SimpleMapState extends State<SimpleMap> {
     //print(response.body);
     var dateConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dateConvertedJSON['rentBikeStatus']['row'];
-//2301. 현대고등학교 건너편 "stationId":"ST-777"
-//2342. 대청역 1번출구  뒤 "stationId":"ST-823"
-//2348. 포스코사거리(기업은행) "stationId":"ST-797"
-//2384. 자곡사거리 "stationId":"ST-1364"
-    //print("-----------------------------------------------------");
+
+    //2301. 현대고등학교 건너편 "stationId":"ST-777"
+    //2342. 대청역 1번출구  뒤 "stationId":"ST-823"
+    //2348. 포스코사거리(기업은행) "stationId":"ST-797"
+    //2384. 자곡사거리 "stationId":"ST-1364"
+
     for (int i = 0; i < result.length; i++) {
       //print(result[i]['stationId']);
       if (result[i]['stationId'] == "ST-777") {
