@@ -26,10 +26,10 @@ class _Home2State extends State<Home2> {
 
   late String total;
   List<Color> colorlist = [
-    Color.fromRGBO(234, 250, 209, 1),
-    Color.fromRGBO(181, 226, 218, 1),
-    Color.fromRGBO(147, 197, 243, 1),
-    Color.fromRGBO(160, 164, 253, 1),
+    const Color.fromRGBO(234, 250, 209, 1),
+    const Color.fromRGBO(181, 226, 218, 1),
+    const Color.fromRGBO(147, 197, 243, 1),
+    const Color.fromRGBO(160, 164, 253, 1),
   ];
 
   late List data;
@@ -236,7 +236,7 @@ class _Home2State extends State<Home2> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         '예상 총 대여량',
                         style: TextStyle(
                           fontSize: 23,
@@ -244,12 +244,10 @@ class _Home2State extends State<Home2> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
-                        width: 30,
-                      ),
+                      const SizedBox(width: 30),
                       Text(
                         total,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
                         ),
@@ -261,7 +259,7 @@ class _Home2State extends State<Home2> {
             ),
             TextField(
               controller: searchTf,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.search), hintText: '검색..'),
               onChanged: (value) {
                 setState(() {
@@ -270,13 +268,12 @@ class _Home2State extends State<Home2> {
               },
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(' 내 관할 대여소 목록'),
-                Icon(Icons.arrow_drop_down),
-                SizedBox(
-                  width: 30,
-                ),
-                Text('공휴일'),
+                const Text(' 내 관할 대여소 목록'),
+                // Icon(Icons.arrow_drop_down),
+                const SizedBox(width: 30),
+                const Text('공휴일'),
                 Transform.scale(
                   scale: 1.0,
                   child: Checkbox(
@@ -301,13 +298,13 @@ class _Home2State extends State<Home2> {
                     });
                     print(pResult);
                   },
-                  child: Text('조회하기'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(118, 186, 153, 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                     ),
                   ),
+                  child: const Text('조회하기'),
                 ),
               ],
             ),
@@ -337,7 +334,7 @@ class _Home2State extends State<Home2> {
               child: FutureBuilder(
                 future: getJSONData(),
                 builder: (context, snapshot) {
-                  if (pbike.length != 0) {
+                  if (pbike.isNotEmpty) {
                     return StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('mystation')
@@ -345,7 +342,7 @@ class _Home2State extends State<Home2> {
                       builder: (context, snapshot) {
                         return (snapshot.connectionState ==
                                 ConnectionState.waiting)
-                            ? Center(
+                            ? const Center(
                                 child: CircularProgressIndicator(),
                               )
                             : ListView.builder(
@@ -360,7 +357,7 @@ class _Home2State extends State<Home2> {
                       },
                     );
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                 },
               ),
@@ -444,10 +441,10 @@ class _Home2State extends State<Home2> {
         },
         child: GestureDetector(
           onTap: () {
-            Message.id = doc.id;
-            Message.snum = doc['snum'];
-            Message.sparkednum = doc['sparkednum'];
-            Message.sexpectednum = doc['sexpectednum'];
+            // Message.id = doc.id;
+            // Message.snum = doc['snum'];
+            // Message.sparkednum = doc['sparkednum'];
+            // Message.sexpectednum = doc['sexpectednum'];
             // Navigator.push(
             //   context,
             //    MaterialPageRoute(
@@ -474,24 +471,21 @@ class _Home2State extends State<Home2> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${mystation.snum}',
-                            style: TextStyle(
+                            mystation.snum,
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                             textAlign: TextAlign.left,
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
+                          const SizedBox(height: 5),
                           Text(mystation.sname),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
+                    const SizedBox(width: 20),
+                    Text(
+                        '현재 거치 수량: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
                   ],
                 ),
               ),
@@ -551,7 +545,7 @@ class _Home2State extends State<Home2> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${mystation.snum}',
+                            mystation.snum,
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -568,7 +562,7 @@ class _Home2State extends State<Home2> {
                     SizedBox(
                       width: 20,
                     ),
-                    Text('현제 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
+                    Text('현재 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
                   ],
                 ),
               ),
