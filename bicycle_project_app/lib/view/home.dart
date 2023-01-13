@@ -45,17 +45,21 @@ class _HomeState extends State<Home> {
       extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        toolbarHeight: 40,
+        toolbarHeight: 50,
         // 그림자
         elevation: 0.5,
-        leading: IconButton(
-          onPressed: () {
-            Drawer();
-          },
-          icon: const Icon(
-            Icons.menu,
-            color: Color(0xFF616161),
-          ),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Drawer();
+        //   },
+        //   icon: const Icon(
+        //     Icons.menu,
+        //     color: Color(0xFF616161),
+        //   ),
+        // ),
+        title: const Text(
+          'BICYCLE',
+          style: TextStyle(color: Colors.black),
         ),
       ),
 
