@@ -1,3 +1,4 @@
+import 'package:bicycle_project_app/Model/userRegisterStatic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -22,12 +23,17 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController userNameController;
   late TextEditingController userPhoneController;
 
-  late List items;
+  late bool seePassword;
+  late bool seeConfirmPassword;
+
+  late List items; // 파이어베이스에서 가져온 데이터 담아둘 리스트
 
   late String idCheck; // ID 중복체크
-  late String userId;
+  late String pwCheck; // PW 동일 여부 체크
 
-  final FocusNode _textNode = FocusNode();
+  final FocusNode _idTextNode = FocusNode();
+  final FocusNode _pwTextNode = FocusNode();
+  final FocusNode _confirmPwTextNode = FocusNode();
 
   @override
   void initState() {
@@ -38,10 +44,13 @@ class _RegisterPageState extends State<RegisterPage> {
     userNameController = TextEditingController();
     userPhoneController = TextEditingController();
 
+    seePassword = true;
+    seeConfirmPassword = true;
+
     items = [];
 
     idCheck = 'ID를 입력하세요.';
-    userId = '';
+    pwCheck = '패스워드를 입력하세요.';
   }
 
   @override
@@ -80,78 +89,129 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 25,
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: RawKeyboardListener(
-                      focusNode: _textNode,
-                      onKey: (value) {
-                        // _fetch1();
-                        userId = getData();
-                      },
-                      child: TextField(
-                        // onChanged: (value) {
-                        //   idcheck();
-                        // },
-                        controller: emailController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            //선택 비선택시 테두리색깔
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                  RawKeyboardListener(
+                    focusNode: _idTextNode,
+                    onKey: (value) {
+                      getData();
+                    },
+                    child: MyTextfield(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      hintText: 'ID',
+                      autofocus: true,
+                      obscureText: false,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  idCheck == '사용 가능한 아이디 입니다.'
+                      ? SizedBox(
+                          width: 330,
+                          child: Text(
+                            idCheck,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue,
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 110, 173, 143),
-                              ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 330,
+                          child: Text(
+                            idCheck,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.red,
                             ),
-                            fillColor: Colors.grey.shade200,
-                            filled: true,
-                            hintText: 'ID',
-                            hintStyle: TextStyle(color: Colors.grey[500])),
+                          ),
+                        ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //password textfield
+                  RawKeyboardListener(
+                    focusNode: _pwTextNode,
+                    onKey: (value) {
+                      checkedPassword();
+                    },
+                    child: MyTextfield(
+                      controller: passwordController,
+                      hintText: 'Password',
+                      autofocus: false,
+                      obscureText: seePassword,
+                      icon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            seePassword == true
+                                ? seePassword = false
+                                : seePassword = true;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.remove_red_eye_rounded,
+                        ),
+                        color: seePassword == true ? Colors.grey : Colors.blue,
                       ),
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  // FutureBuilder(
-                  //     future: _fetch1(),
-                  //     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  //       //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
-                  //       if (snapshot.hasData == false) {
-                  //         return const CircularProgressIndicator();
-                  //       }
-                  //       // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                  //       else {
-                  //         return Padding(
-                  //           padding: const EdgeInsets.all(8.0),
-                  //           child: Text(
-                  //             idCheck,
-                  //             style: const TextStyle(fontSize: 15),
-                  //           ),
-                  //         );
-                  //       }
-                  //     }),
-                  Text(userId),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  //password textfield
-                  MyTextfield(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
 
                   //confirm password textfield
-                  MyTextfield(
-                    controller: confirmPasswordController,
-                    hintText: 'Confirm Password',
-                    obscureText: true,
+                  RawKeyboardListener(
+                    focusNode: _confirmPwTextNode,
+                    onKey: (value) {
+                      checkedPassword();
+                    },
+                    child: MyTextfield(
+                      controller: confirmPasswordController,
+                      hintText: 'Confirm Password',
+                      autofocus: false,
+                      obscureText: seeConfirmPassword,
+                      icon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            seeConfirmPassword == true
+                                ? seeConfirmPassword = false
+                                : seeConfirmPassword = true;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.remove_red_eye,
+                        ),
+                        color: seeConfirmPassword == true
+                            ? Colors.grey
+                            : Colors.blue,
+                      ),
+                    ),
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  pwCheck == '패스워드가 일치합니다.'
+                      ? SizedBox(
+                          width: 330,
+                          child: Text(
+                            pwCheck,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 330,
+                          child: Text(
+                            pwCheck,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -159,6 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextfield(
                     controller: userNameController,
                     hintText: 'Name',
+                    autofocus: false,
                     obscureText: false,
                   ),
                   const SizedBox(
@@ -168,6 +229,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextfield(
                     controller: userPhoneController,
                     hintText: 'Phone',
+                    autofocus: false,
                     obscureText: false,
                   ),
                   const SizedBox(
@@ -181,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     text: '회원가입',
                     onTap: () {
                       // signUserUp();
-                      registerAction();
+                      registerNullCheck();
                     },
                   ),
                   const SizedBox(
@@ -246,7 +308,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       GestureDetector(
                         onTap: widget.onTap,
                         child: const Text(
-                          'Register now',
+                          'Log In now',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -267,14 +329,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void signUserUp() async {
     //로딩화면
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
     //유저생성
     try {
       //비밀번호와 비밀번호 확인이 같은지 체크
@@ -288,20 +350,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-//로딩화면끄기
+      // 로딩화면끄기
       Navigator.pop(context);
       // Wrong email
       if (e.code == 'user-not-found') {
-        //없는계정
+        // 없는계정
         showErrorMessage('계정정보가 일치하지 않습니다');
       } else if (e.code == 'wrong-password') {
-        //비밀번호 틀림
-        showErrorMessage('계정정보가 일치하지 않습니다');
+        // 비밀번호 틀림
+        showErrorMessage('패스워드가 일치하지 않습니다');
       }
     }
   }
 
-  //function
+  // --- Functions
 
   void showErrorMessage(String message) {
     showDialog(
@@ -320,15 +382,52 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  registerNullCheck() {
+    if (emailController.text.isEmpty) {
+      showSnackBar('아이디를 입력하세요.');
+    } else if (passwordController.text.isEmpty) {
+      showSnackBar('패스워드를 입력하세요.');
+    } else if (confirmPasswordController.text.isEmpty) {
+      showSnackBar('패스워드 확인을 입력하세요');
+    } else if (userNameController.text.isEmpty) {
+      showSnackBar('이름을 입력하세요.');
+    } else if (userPhoneController.text.isEmpty) {
+      showSnackBar('전화번호를 입력하세요.');
+    } else {
+      registerAction();
+    }
+  }
+
   // firebase database에 유저 정보 등록 (회원가입)
   registerAction() {
-    FirebaseFirestore.instance.collection('user').add({
-      'uId': emailController.text,
-      'uPassword': passwordController.text,
-      'uName': userNameController.text,
-      'uPhone': userPhoneController.text
-    });
+    if (userRegisterStatic.idCheck == 1 && userRegisterStatic.pwCheck == 1) {
+      FirebaseFirestore.instance.collection('user').add({
+        'uId': emailController.text,
+        'uPassword': passwordController.text,
+        'uName': userNameController.text,
+        'uPhone': userPhoneController.text
+      });
+    } else if (userRegisterStatic.idCheck == 0) {
+      showSnackBar('중복 된 아이디 입니다.\n다른 아이디를 입력하세요.');
+    } else {
+      showSnackBar('패스워드가 일치하지 않습니다.\n패스워드를 동일하게 입력하세요.');
+    }
     _showDialog(context);
+  }
+
+  showSnackBar(String result) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   _showDialog(BuildContext context) {
@@ -354,6 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+// ID 중복체크
   getData() async {
     var ID = '';
     setState(() {
@@ -367,66 +467,47 @@ class _RegisterPageState extends State<RegisterPage> {
       for (var i in snapshot.docs) {
         items.add(i.data());
       }
-      // snapshot.docs.forEach(
-      //   // add data to your list
-      //   (f) => items.add(f.data()),
-      // );
     });
-    if (items.isNotEmpty) {
-      print('userId : ' + items[0]['uId']);
-      print(items.length);
-      print(items);
-      for (int i = 0; i < items.length; i++) {
-        if (emailController.text == items[i]['uId']) {
-          print('true : ' + emailController.text == items[i]['uId']);
-          return '중복 된 아이디 입니다.';
-        } else {
-          print('false : ' + emailController.text == items[i]['uId']);
-          return '사용 가능한 아이디 입니다.';
+    setState(() {
+      if (items.isNotEmpty) {
+        for (int i = 0; i < items.length; i++) {
+          if (emailController.text == items[i]['uId']) {
+            items.removeAt(0);
+            idCheck = '중복 된 아이디 입니다.';
+            userRegisterStatic.idCheck = 0;
+          } else {
+            idCheck = '사용 가능한 아이디 입니다.';
+            userRegisterStatic.idCheck = 1;
+          }
         }
+      } else {
+        idCheck = '사용 가능한 아이디 입니다.';
+        userRegisterStatic.idCheck = 1;
       }
-    }
-    // return userId;
+
+      if (emailController.text.isEmpty) {
+        idCheck = 'ID를 입력하세요.';
+        userRegisterStatic.idCheck = 0;
+      }
+    });
   }
 
-  // Future<String> _fetch1() async {
-  //   print('OK');
-  //   userId = FirebaseFirestore.instance
-  //       .collection('user')
-  //       .where('uId', isEqualTo: 'user')
-  //       .get()
-  //       // .snapshots()
-  //       .toString();
-  //   print(userId);
-  //   setState(() {
-  //     print(emailController.text);
-  //     if (userId == emailController.text) {
-  //       idCheck = '중복 된 아이디 입니다.';
-  //     } else if (userId != emailController.text) {
-  //       idCheck = '사용 가능한 아이디 입니다.';
-  //     }
-  //   });
-  //   return idCheck;
-  // }
-
-  // idcheck() {
-  //   setState(() {
-  //     userId = FirebaseFirestore.instance
-  //         .collection('user')
-  //         .where('uId', isEqualTo: emailController.text)
-  //         .get()
-  //         // .snapshots()
-  //         .toString();
-
-  //     _fetch1();
-
-  //     setState(() {
-  //       print(emailController.text);
-  //       print(userId);
-  //       print(userId == emailController.text);
-  //     });
-  //   });
-  // }
+  checkedPassword() {
+    setState(() {
+      if (passwordController.text != confirmPasswordController.text) {
+        pwCheck = '패스워드가 일치하지 않습니다.';
+        userRegisterStatic.pwCheck = 0;
+      } else {
+        pwCheck = '패스워드가 일치합니다.';
+        userRegisterStatic.pwCheck = 1;
+      }
+      if (passwordController.text.isEmpty &&
+          confirmPasswordController.text.isEmpty) {
+        pwCheck = '패스워드를 입력하세요.';
+        userRegisterStatic.pwCheck = 0;
+      }
+    });
+  }
 
   // void wrongPasswordMessage() {
   //   showDialog(

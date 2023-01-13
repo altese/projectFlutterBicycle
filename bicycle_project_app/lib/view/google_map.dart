@@ -53,7 +53,7 @@ class _SimpleMapState extends State<SimpleMap> {
     longitude = ['127.0218', '127.1059', '127.0795', '127.0569'];
     selectedItem = 0;
 
-    _valueList = ['현대고등학교 건너편', '자곡 사거리', '대청역 1번출구 뒤', '포스코 사거리'];
+    _valueList = ['현대고등학교 건너편', '자곡 사거리', '대청역 1번출구 뒤', '포스코 사거리(기업은행)'];
     stationNum = ['2301', '2384', '2342', '2348'];
 
     _toDay = DateTime.now();
@@ -341,16 +341,16 @@ class _SimpleMapState extends State<SimpleMap> {
       //print(result[i]['stationId']);
       if (result[i]['stationId'] == "ST-777") {
         StationStatic.parking2301 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-823") {
         StationStatic.parking2342 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-797") {
         StationStatic.parking2348 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-1364") {
         StationStatic.parking2384 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       }
     }
     return true;
