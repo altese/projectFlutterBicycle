@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:bicycle_project_app/model/message.dart';
-import 'package:bicycle_project_app/model/mystation.dart';
-import 'package:bicycle_project_app/model/weather_static.dart';
+import 'package:bicycle_project_app/Model/message.dart';
+import 'package:bicycle_project_app/Model/mystation.dart';
+import 'package:bicycle_project_app/Model/weather_static.dart';
 import 'package:bicycle_project_app/view/pages/detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../model/station_static.dart';
+import '../Model/station_static.dart';
 
 class Home2 extends StatefulWidget {
   const Home2({super.key});
@@ -450,6 +450,8 @@ class _Home2State extends State<Home2> {
             Message.snum = doc['snum'];
             Message.sparkednum = doc['sparkednum'];
             Message.sexpectednum = doc['sexpectednum'];
+            Message.pbike = pbike[index];
+            Message.presult = pResult[index];
             Navigator.push(
               context,
               MaterialPageRoute(
