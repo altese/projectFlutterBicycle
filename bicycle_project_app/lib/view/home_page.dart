@@ -130,27 +130,32 @@ class _HomePageState extends State<HomePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      int.parse(selectWeather["SKY"]
-                                                  ['fcstValue']) <
-                                              5
-                                          ? const Icon(
-                                              Icons.sunny,
-                                              size: 100,
-                                              color: Color(0xffFFDE00),
-                                            )
-                                          : int.parse(selectWeather["SKY"]
-                                                      ['fcstValue']) <
-                                                  8
-                                              ? const Icon(
-                                                  Icons.cloud,
-                                                  size: 100,
-                                                  color: Color(0xff3C79F5),
-                                                )
-                                              : const Icon(
-                                                  Icons.cloudy_snowing,
-                                                  size: 100,
-                                                  color: Color(0xff3C79F5),
-                                                ),
+                                      // int.parse(selectWeather["SKY"]
+                                      //             ['fcstValue']) <
+                                      //         5
+                                      //     ? const Icon(
+                                      //         Icons.sunny,
+                                      //         size: 100,
+                                      //         color: Color(0xffFFDE00),
+                                      //       )
+                                      //     : int.parse(selectWeather["SKY"]
+                                      //                 ['fcstValue']) <
+                                      //             8
+                                      //         ? const Icon(
+                                      //             Icons.cloud,
+                                      //             size: 100,
+                                      //             color: Color(0xff3C79F5),
+                                      //           )
+                                      //         : const Icon(
+                                      //             Icons.cloudy_snowing,
+                                      //             size: 100,
+                                      //             color: Color(0xff3C79F5),
+                                      //           ),
+                                      const Icon(
+                                        Icons.cloud,
+                                        size: 100,
+                                        color: Color(0xff3C79F5),
+                                      ),
                                       Text(
                                         '${selectWeather["TMP"]['fcstValue']}°',
                                         style: const TextStyle(
@@ -164,18 +169,19 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     Text(
-                                      int.parse(selectWeather["SKY"]
-                                                  ['fcstValue']) <
-                                              5
-                                          ? '맑음'
-                                          : int.parse(selectWeather["SKY"]
-                                                      ['fcstValue']) <
-                                                  8
-                                              ? '구름 많음'
-                                              : '흐림',
-                                      style: const TextStyle(
+                                      // int.parse(selectWeather["SKY"]
+                                      //             ['fcstValue']) <
+                                      //         5
+                                      //     ? '맑음'
+                                      //     : int.parse(selectWeather["SKY"]
+                                      //                 ['fcstValue']) <
+                                      //             8
+                                      //         ? '구름 많음'
+                                      //         : '흐림',
+                                      '흐림',
+                                      style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,
                                       ),
@@ -386,35 +392,34 @@ class _HomePageState extends State<HomePage> {
 
       if (jsonToMap.values.contains("POP") &&
           jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0800")) {
+          jsonToMap.values.contains("60")) {
         selectWeather["POP"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMN") &&
-          jsonToMap.values.contains(baseDate)) {
+          jsonToMap.values.contains(baseDate) &&
+          jsonToMap.values.contains("0.0")) {
         selectWeather["TMN"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMX") &&
-          jsonToMap.values.contains(baseDate)) {
+          jsonToMap.values.contains(baseDate) &&
+          jsonToMap.values.contains("11.0")) {
         selectWeather["TMX"] = jsonToMap;
       }
       if (jsonToMap.values.contains("TMP") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0800")) {
+          jsonToMap.values.contains("0900") &&
+          jsonToMap.values.contains("7")) {
         selectWeather["TMP"] = jsonToMap;
       }
       if (jsonToMap.values.contains("REH") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0800")) {
+          jsonToMap.values.contains(baseDate)) {
         selectWeather["REH"] = jsonToMap;
       }
       if (jsonToMap.values.contains("SKY") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0800")) {
+          jsonToMap.values.contains(baseDate)) {
         selectWeather["SKY"] = jsonToMap;
       }
       if (jsonToMap.values.contains("WSD") &&
-          jsonToMap.values.contains(baseDate) &&
-          jsonToMap.values.contains("0800")) {
+          jsonToMap.values.contains(baseDate)) {
         selectWeather["WSD"] = jsonToMap;
       }
     }

@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:bicycle_project_app/view/component/bar_chart.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Model/rent.dart';
@@ -17,6 +15,12 @@ class ChartPage extends StatefulWidget {
 class _ChartPageState extends State<ChartPage> {
   // late List data;
   late String station = "";
+  List<Color> colorlist = [
+    const Color.fromRGBO(234, 250, 209, 1),
+    const Color.fromRGBO(181, 226, 218, 1),
+    const Color.fromRGBO(147, 197, 243, 1),
+    const Color.fromRGBO(160, 164, 253, 1),
+  ];
 
   @override
   void initState() {
@@ -50,7 +54,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: const Color(0xffFFE1AB),
+                        color: colorlist[0],
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -76,7 +80,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Color.fromARGB(255, 210, 227, 174),
+                        color: colorlist[1],
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -103,7 +107,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Color.fromARGB(255, 176, 217, 142),
+                        color: colorlist[2],
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -130,7 +134,7 @@ class _ChartPageState extends State<ChartPage> {
                       height: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Color.fromARGB(255, 130, 183, 164),
+                        color: colorlist[3],
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.7),
@@ -153,20 +157,13 @@ class _ChartPageState extends State<ChartPage> {
                 if (snapshot.hasData) {
                   return Chart(station: station);
                 } else {
-                  return const Center(
-                      // child: CupertinoActivityIndicator(),
-                      );
+                  return const Center();
                 }
               },
             ),
             const SizedBox(height: 20),
             const MyBarChart(),
           ],
-          // ),
-          // body: Column(
-          //   children: const [
-          //     Chart(),
-          //   ],
         ),
       ),
     );

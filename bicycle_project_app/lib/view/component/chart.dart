@@ -18,7 +18,12 @@ class _ChartState extends State<Chart> {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
-
+  List<Color> colorlist = [
+    const Color.fromRGBO(234, 250, 209, 1),
+    const Color.fromRGBO(181, 226, 218, 1),
+    const Color.fromRGBO(147, 197, 243, 1),
+    const Color.fromRGBO(160, 164, 253, 1),
+  ];
   // late List rentData2301 = [];
   //  FlSpot(1, double.parse(Rent.rentCounts[0]['rcount']))
 
@@ -68,12 +73,12 @@ class _ChartState extends State<Chart> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               color: widget.station == "2301"
-                  ? MyColors.circleColors[0]
+                  ? colorlist[0]
                   : widget.station == "2342"
-                      ? MyColors.circleColors[1]
+                      ? colorlist[1]
                       : widget.station == "2348"
-                          ? MyColors.circleColors[2]
-                          : MyColors.circleColors[3],
+                          ? colorlist[2]
+                          : colorlist[3],
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
