@@ -4,11 +4,8 @@ import 'dart:math';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-
-// import 'package:example/utils/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MyBarChart extends StatefulWidget {
   const MyBarChart({super.key});
@@ -64,14 +61,11 @@ class MyBarChartState extends State<MyBarChart> {
                           const Text(
                             '어제의 대여량',
                             style: TextStyle(
-                              // color: Color(0xff0f4a3c),
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           Expanded(
                             child: Padding(
                               padding:
@@ -82,9 +76,7 @@ class MyBarChartState extends State<MyBarChart> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 12,
-                          ),
+                          const SizedBox(height: 12),
                         ],
                       ),
                     ),
@@ -119,9 +111,6 @@ class MyBarChartState extends State<MyBarChart> {
           color: isTouched ? Colors.yellow : barColor,
           width: width,
           borderSide: const BorderSide(color: Colors.white, width: 0),
-          // isTouched
-          //     ? BorderSide(color: Colors.yellow.darken())
-          //     : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 60,
@@ -152,6 +141,7 @@ class MyBarChartState extends State<MyBarChart> {
         }
       });
 
+  // x축
   BarChartData mainBarData() {
     return BarChartData(
       barTouchData: BarTouchData(
@@ -340,27 +330,6 @@ class MyBarChartState extends State<MyBarChart> {
               barColor: widget.availableColors[
                   Random().nextInt(widget.availableColors.length)],
             );
-          // case 4:
-          //   return makeGroupData(
-          //     4,
-          //     Random().nextInt(15).toDouble() + 6,
-          //     barColor: widget.availableColors[
-          //         Random().nextInt(widget.availableColors.length)],
-          //   );
-          // case 5:
-          //   return makeGroupData(
-          //     5,
-          //     Random().nextInt(15).toDouble() + 6,
-          //     barColor: widget.availableColors[
-          //         Random().nextInt(widget.availableColors.length)],
-          //   );
-          // case 6:
-          //   return makeGroupData(
-          //     6,
-          //     Random().nextInt(15).toDouble() + 6,
-          //     barColor: widget.availableColors[
-          //         Random().nextInt(widget.availableColors.length)],
-          // );
           default:
             return throw Error();
         }
