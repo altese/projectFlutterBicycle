@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bicycle_project_app/model/message.dart';
 import 'package:bicycle_project_app/model/mystation.dart';
 import 'package:bicycle_project_app/model/weather_static.dart';
+import 'package:bicycle_project_app/view/pages/detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -441,14 +442,16 @@ class _Home2State extends State<Home2> {
         },
         child: GestureDetector(
           onTap: () {
-            // Message.id = doc.id;
-            // Message.snum = doc['snum'];
-            // Message.sparkednum = doc['sparkednum'];
-            // Message.sexpectednum = doc['sexpectednum'];
-            // Navigator.push(
-            //   context,
-            //    MaterialPageRoute(
-            //     builder: (context) => const Update(),),);
+            Message.sname = doc['sname'];
+            Message.snum = doc['snum'];
+            Message.sparkednum = doc['sparkednum'];
+            Message.sexpectednum = doc['sexpectednum'];
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DetailPage(),
+              ),
+            );
           },
           // 대여소별 리스트 ==========================================
           child: Padding(
@@ -515,14 +518,16 @@ class _Home2State extends State<Home2> {
         },
         child: GestureDetector(
           onTap: () {
-            Message.id = doc.id;
+            Message.sname = doc['sname'];
             Message.snum = doc['snum'];
             Message.sparkednum = doc['sparkednum'];
             Message.sexpectednum = doc['sexpectednum'];
-            // Navigator.push(
-            //   context,
-            //    MaterialPageRoute(
-            //     builder: (context) => const Update(),),);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DetailPage(),
+              ),
+            );
           },
           // 대여소별 리스트 ==========================================
           child: Padding(
