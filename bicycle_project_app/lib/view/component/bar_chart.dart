@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 // import 'package:example/utils/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MyBarChart extends StatefulWidget {
   const MyBarChart({super.key});
@@ -378,13 +380,23 @@ class MyBarChartState extends State<MyBarChart> {
   }
 
   Future<bool> getJSONData() async {
+    String baseDate = formatDate(
+        DateTime.now().subtract(const Duration(days: 1)),
+        [yyyy, '-', mm, '-', dd]);
+
+    // DateTime.
+    formatDate(DateTime.now(), [yyyy, mm, dd]);
+
+    // double baseDate = 20230111;
+    print('baseDate: $baseDate');
+
     var url1000 = Uri.parse(
-        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1/1000/20230111');
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1/1000/$baseDate');
     var url2000 = Uri.parse(
-        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1001/2000/20230111');
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/1001/2000/$baseDate');
 
     var url3000 = Uri.parse(
-        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/2001/3000/20230111');
+        'http://openapi.seoul.go.kr:8088/69614676726865733131375661556564/json/tbCycleUseStatus/2001/3000/$baseDate');
 
     var response1000 = await http.get(url1000);
     var response2000 = await http.get(url2000);
