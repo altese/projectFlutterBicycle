@@ -1,3 +1,5 @@
+import 'package:bicycle_project_app/Model/userRegisterStatic.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
 
+  late List items; // 파이어베이스에서 가져온 데이터 담아둘 리스트
   late bool seePassword;
 
   @override
@@ -25,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     emailController = TextEditingController();
     passwordController = TextEditingController();
 
+    items = [];
     seePassword = true;
   }
 
@@ -106,7 +110,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 MyButton(
                   text: '로그인',
-                  onTap: signUserIn,
+                  onTap: () {
+                    getUserInfo();
+                    signUserIn();
+                  },
                 ),
                 const SizedBox(
                   height: 50,
@@ -203,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-//로딩화면끄기
+      // 로딩화면끄기
       Navigator.pop(context);
       // Wrong email
       if (e.code == 'user-not-found') {
@@ -247,5 +254,26 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  getUserInfo() async {
+    var ID = '';
+    setState(() {
+      ID = emailController.text;
+    });
+    await FirebaseFirestore.instance
+        .collection("user")
+        .where('uId', isEqualTo: ID)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      for (var i in snapshot.docs) {
+        items.add(i.data());
+      }
+      // FirebaseFirestore.instance.collection('user').where('uId', isEqualTo: ID).get().;
+      userInfo.userId = items[0]['uId'].toString();
+      userInfo.userPw = items[0]['uPw'].toString();
+      userInfo.userName = items[0]['uName'].toString();
+      userInfo.userPhone = items[0]['uPhone'].toString();
+    });
   }
 }//End
