@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                         children: const [SizedBox(height: 20)],
                       ),
                       Container(
-                        height: 200,
+                        height: 250,
                         width: 350,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
@@ -123,10 +123,23 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Center(
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text(
+                                      '서울특별시 강남구 날씨',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       // int.parse(selectWeather["SKY"]
@@ -150,18 +163,24 @@ class _HomePageState extends State<HomePage> {
                                       //             size: 100,
                                       //             color: Color(0xff3C79F5),
                                       //           ),
-                                      const Icon(
-                                        Icons.cloud,
-                                        size: 100,
-                                        color: Color(0xff3C79F5),
-                                      ),
-                                      Text(
-                                        '${selectWeather["TMP"]['fcstValue']}°',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 50,
-                                          color: Colors.black,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.cloud,
+                                            size: 100,
+                                            color: Color(0xff3C79F5),
+                                          ),
+                                          Text(
+                                            ' ${selectWeather["TMP"]['fcstValue']}°',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 50,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),

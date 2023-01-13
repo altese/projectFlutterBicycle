@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bicycle_project_app/model/message.dart';
 import 'package:bicycle_project_app/model/mystation.dart';
 import 'package:bicycle_project_app/model/weather_static.dart';
@@ -7,7 +6,6 @@ import 'package:bicycle_project_app/view/pages/detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../model/station_static.dart';
 
 class Home2 extends StatefulWidget {
@@ -198,10 +196,15 @@ class _Home2State extends State<Home2> {
       '28 ~ 35',
       '28 ~ 35'
     ];
-    getJSONData2301();
-    getJSONData2342();
-    getJSONData2348();
-    getJSONData2384();
+
+    // getJSONData2301();
+    // getJSONData2342();
+    // getJSONData2348();
+    // getJSONData2384();
+
+    // calc();
+
+    totalSum();
   }
 
   @override
@@ -290,13 +293,14 @@ class _Home2State extends State<Home2> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      getJSONData2301();
-                      getJSONData2342();
-                      getJSONData2348();
-                      getJSONData2384();
-                      calc();
-                    });
+                    // setState(() {
+                    getJSONData2301();
+                    getJSONData2342();
+                    getJSONData2348();
+                    getJSONData2384();
+                    calc();
+                    // });
+                    setState(() {});
                     print(pResult);
                   },
                   style: ElevatedButton.styleFrom(
@@ -551,22 +555,18 @@ class _Home2State extends State<Home2> {
                         children: [
                           Text(
                             mystation.snum,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                             textAlign: TextAlign.left,
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
+                          const SizedBox(height: 5),
                           Text(mystation.sname),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
+                    const SizedBox(width: 20),
                     Text('현재 대수: ${pbike[index]} \n예상 대여량: ${pResult[index]}')
                   ],
                 ),
@@ -596,16 +596,16 @@ class _Home2State extends State<Home2> {
       //print(result[i]['stationId']);
       if (result[i]['stationId'] == "ST-777") {
         StationStatic.parking2301 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-823") {
         StationStatic.parking2342 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-797") {
         StationStatic.parking2348 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       } else if (result[i]['stationId'] == "ST-1364") {
         StationStatic.parking2384 = result[i]['parkingBikeTotCnt'];
-        print(result[i]['stationName']);
+        // print(result[i]['stationName']);
       }
     }
     pbike = [];
@@ -613,7 +613,7 @@ class _Home2State extends State<Home2> {
     pbike.add(StationStatic.parking2342);
     pbike.add(StationStatic.parking2348);
     pbike.add(StationStatic.parking2384);
-    print(pbike);
+    // print(pbike);
     return true;
   }
 
@@ -625,27 +625,27 @@ class _Home2State extends State<Home2> {
     } else {
       holidayNum = 1; // 비공휴일
     }
-    print('holiday2301:${holidayNum}');
+    // print('holiday2301:$holidayNum');
     // 날짜를 숫자로 변경 후 jsp로 전달
 
-    var url;
+    Uri url;
 
     //2301=======================================
 
     url = Uri.parse(
-        'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2301.jsp?temp=$temp&atemp=$atemp&humidity=$humidity&windspeed=$windspeed&season=$seasonNum&month=$month&holiday=$holidayNum');
 
     var response = await http.get(url);
 
-    setState(() {
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      result = dataConvertedJSON['result'];
-    });
+    // setState(() {
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    result = dataConvertedJSON['result'];
+    // });
     result = clusterResult2301[int.parse(result) - 1];
 
-    setState(() {
-      pResult[0] = result;
-    });
+    // setState(() {
+    pResult[0] = result;
+    // });
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
     print('2301:::::::::${pResult[0]}');
@@ -659,13 +659,13 @@ class _Home2State extends State<Home2> {
     } else {
       holidayNum = 1; // 비공휴일
     }
-    print('holiday2342:${holidayNum}');
+    print('holiday2342:$holidayNum');
     // 날짜를 숫자로 변경 후 jsp로 전달
 
     var url;
 
     url = Uri.parse(
-        'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2342.jsp?temp=$temp&atemp=$atemp&humidity=$humidity&windspeed=$windspeed&season=$seasonNum&month=$month&holiday=$holidayNum');
 
     var response = await http.get(url);
 
@@ -675,9 +675,9 @@ class _Home2State extends State<Home2> {
     });
     result = clusterResult2342[int.parse(result) - 1];
 
-    setState(() {
-      pResult[1] = result;
-    });
+    // setState(() {
+    pResult[1] = result;
+    // });
     print('2342:::::::::${pResult[1]}');
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
@@ -692,24 +692,24 @@ class _Home2State extends State<Home2> {
     } else {
       holidayNum = 1; // 비공휴일
     }
-    print('holiday2348:${holidayNum}');
+    print('holiday2348:$holidayNum');
     // 날짜를 숫자로 변경 후 jsp로 전달
 
     var url;
 
     url = Uri.parse(
-        'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2348.jsp?temp=$temp&atemp=$atemp&humidity=$humidity&windspeed=$windspeed&season=$seasonNum&month=$month&holiday=$holidayNum');
 
     var response = await http.get(url);
 
-    setState(() {
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      result = dataConvertedJSON['result'];
-    });
+    // setState(() {
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    result = dataConvertedJSON['result'];
+    // });
     result = clusterResult2348[int.parse(result) - 1];
-    setState(() {
-      pResult[2] = result;
-    });
+    // setState(() {
+    pResult[2] = result;
+    // });
     print('2348:::::::::${pResult[2]}');
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
@@ -724,24 +724,24 @@ class _Home2State extends State<Home2> {
     } else {
       holidayNum = 0; // 비공휴일
     }
-    print('holiday2384:${holidayNum}');
+    print('holiday2384:$holidayNum');
     // 날짜를 숫자로 변경 후 jsp로 전달
 
     var url;
 
     url = Uri.parse(
-        'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=${temp}&atemp=${atemp}&humidity=${humidity}&windspeed=${windspeed}&season=$seasonNum&month=$month&holiday=$holidayNum');
+        'http://localhost:8080/RserveFlutter/prediction_bicycle_2384.jsp?temp=$temp&atemp=$atemp&humidity=$humidity&windspeed=$windspeed&season=$seasonNum&month=$month&holiday=$holidayNum');
 
     var response = await http.get(url);
 
-    setState(() {
-      var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-      result = dataConvertedJSON['result'];
-    });
+    // setState(() {
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    result = dataConvertedJSON['result'];
+    // });
     result = clusterResult2384[int.parse(result) - 1];
-    setState(() {
-      pResult[3] = result;
-    });
+    // setState(() {
+    pResult[3] = result;
+    // });
     print('2384:::::::::${pResult[3]}');
     //================================================================
     // 시용자가 선택한 대여소에 해당하는 대여량을 출력함
@@ -749,19 +749,20 @@ class _Home2State extends State<Home2> {
     // _showDialog(context, result);
   }
 
-  Future calc() async {
-    setState(() {
-      total = (int.parse(pResult[0].toString().substring(0, 3)) +
-                  int.parse(pResult[1].toString().substring(0, 3)) +
-                  int.parse(pResult[2].toString().substring(0, 3)) +
-                  int.parse(pResult[3].toString().substring(0, 3)))
-              .toString() +
-          "~" +
-          (int.parse(pResult[0].toString().substring(5, 7)) +
-                  int.parse(pResult[1].toString().substring(5, 7)) +
-                  int.parse(pResult[2].toString().substring(5, 7)) +
-                  int.parse(pResult[3].toString().substring(5, 7)))
-              .toString();
-    });
+  calc() {
+    // setState(() {
+    total =
+        "${int.parse(pResult[0].toString().substring(0, 3)) + int.parse(pResult[1].toString().substring(0, 3)) + int.parse(pResult[2].toString().substring(0, 3)) + int.parse(pResult[3].toString().substring(0, 3))}~${int.parse(pResult[0].toString().substring(5, 7)) + int.parse(pResult[1].toString().substring(5, 7)) + int.parse(pResult[2].toString().substring(5, 7)) + int.parse(pResult[3].toString().substring(5, 7))}";
+    // });
+  }
+
+  Future totalSum() async {
+    await getJSONData2301();
+    await getJSONData2342();
+    await getJSONData2348();
+    await getJSONData2384();
+
+    calc();
+    setState(() {});
   }
 } //end
