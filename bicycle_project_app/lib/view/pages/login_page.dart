@@ -17,12 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
 
+  late bool seePassword;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
+    seePassword = true;
   }
 
   @override
@@ -58,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 MyTextfield(
                   controller: emailController,
                   hintText: '이메일',
+                  autofocus: true,
                   obscureText: false,
                 ),
                 const SizedBox(
@@ -66,7 +70,21 @@ class _LoginPageState extends State<LoginPage> {
                 MyTextfield(
                   controller: passwordController,
                   hintText: '비밀번호',
-                  obscureText: true,
+                  autofocus: false,
+                  obscureText: seePassword,
+                  icon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        seePassword == true
+                            ? seePassword = false
+                            : seePassword = true;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.remove_red_eye_rounded,
+                    ),
+                    color: seePassword == true ? Colors.grey : Colors.blue,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
