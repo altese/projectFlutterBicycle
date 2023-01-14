@@ -210,18 +210,18 @@ class _HomePageState extends State<HomePage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text('최고 '),
-                                    Text(
-                                      '${selectWeather["TMX"]['fcstValue']}° ',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Text('최저 '),
-                                    Text(
-                                      '${selectWeather["TMN"]['fcstValue']}° ',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    // const Text('최고 '),
+                                    // Text(
+                                    //   '${selectWeather["TMX"]['fcstValue']}° ',
+                                    //   style: const TextStyle(
+                                    //       fontWeight: FontWeight.bold),
+                                    // ),
+                                    // const Text('최저 '),
+                                    // Text(
+                                    //   '${selectWeather["TMN"]['fcstValue']}° ',
+                                    //   style: const TextStyle(
+                                    //       fontWeight: FontWeight.bold),
+                                    // ),
                                     const Text('풍속 '),
                                     Text(
                                       '${selectWeather["WSD"]['fcstValue']}m/s ',
