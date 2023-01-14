@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../Model/message.dart';
 import '../../model/rent.dart';
+import '../component/chart.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -45,6 +46,7 @@ class _DetailPageState extends State<DetailPage>
     controller = TabController(length: 2, vsync: this);
     id = '';
     snum = Message.snum;
+    print('snum: $snum');
     sparkednum = Message.sparkednum;
     sexpectednum = Message.sexpectednum;
     sname = Message.sname;
@@ -201,20 +203,16 @@ class _DetailPageState extends State<DetailPage>
                 controller: controller,
                 children: [
                   //=================================탭바의 차트
-                  Container(
-                      // height: 50,
-                      // width: 50,
-                      // child: FutureBuilder(
-                      //   future: getJSONData(),
-                      //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      //     if (snapshot.hasData) {
-                      //       return Chart(station: snum);
-                      //     } else {
-                      //       return const Center();
-                      //     }
-                      //   },
-                      // ),
-                      ),
+                  FutureBuilder(
+                    future: getJSONData(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return Chart(station: snum);
+                      } else {
+                        return const Center();
+                      }
+                    },
+                  ),
                   //==================================탭바의 지도
                   Container(
                     height: 50,
@@ -261,7 +259,7 @@ class _DetailPageState extends State<DetailPage>
     Rent.rentCounts.addAll(result);
     // Rent.fromMap(result);
     // });
-    print('rcount: ${Rent.rentCounts[0]['rcount']}');
+    // print('rcount: ${Rent.rentCounts[0]['rcount']}');
     return true;
   }
 }
