@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'package:bicycle_project_app/Model/message.dart';
 import 'package:bicycle_project_app/Model/mystation.dart';
-import 'package:bicycle_project_app/Model/weather_static.dart';
 import 'package:bicycle_project_app/view/pages/detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Model/station_static.dart';
+import '../Model/weather_static.dart';
 
-class Home2 extends StatefulWidget {
-  const Home2({super.key});
+class TotalPage extends StatefulWidget {
+  const TotalPage({super.key});
 
   @override
-  State<Home2> createState() => _Home2State();
+  State<TotalPage> createState() => _TotalPageState();
 }
 
-class _Home2State extends State<Home2> {
+class _TotalPageState extends State<TotalPage> {
   String name = '';
   late TextEditingController searchTf;
   late String temp; // 최저기온
@@ -85,10 +85,14 @@ class _Home2State extends State<Home2> {
     super.initState();
     total = '';
     searchTf = TextEditingController();
-    temp = weatherStatic.TMN.toString();
-    atemp = weatherStatic.TMX.toString();
-    humidity = weatherStatic.REH.toString();
-    windspeed = weatherStatic.WSD.toString();
+    temp = WeatherStatic.TMN.toString();
+    atemp = WeatherStatic.TMX.toString();
+    humidity = WeatherStatic.REH.toString();
+    windspeed = WeatherStatic.WSD.toString();
+    print(temp);
+    print(atemp);
+    print(humidity);
+    print(windspeed);
     data = [];
     pbike = [];
     pResult2 = [];

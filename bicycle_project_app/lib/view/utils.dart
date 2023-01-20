@@ -3,8 +3,6 @@
 
 import 'dart:collection';
 
-import 'package:bicycle_project_app/Model/station_static.dart';
-
 /// Example event class.
 class Event {
   final String title;
