@@ -269,11 +269,14 @@ class _LoginPageState extends State<LoginPage> {
       for (var i in snapshot.docs) {
         items.add(i.data());
       }
+      print(FirebaseAuth.instance.currentUser?.uid);
       // FirebaseFirestore.instance.collection('user').where('uId', isEqualTo: ID).get().;
+      userInfo.docId = FirebaseAuth.instance.currentUser!.uid;
       userInfo.userId = items[0]['uId'].toString();
       userInfo.userPw = items[0]['uPw'].toString();
       userInfo.userName = items[0]['uName'].toString();
       userInfo.userPhone = items[0]['uPhone'].toString();
+      // print(userInfo.docId);
     });
   }
 }//End

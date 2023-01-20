@@ -1,5 +1,4 @@
 import 'package:bicycle_project_app/Model/userRegisterStatic.dart';
-import 'package:bicycle_project_app/view/pages/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -377,6 +376,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  // 텍스트필드에 비어있는 값이 있는지 체크
   registerNullCheck() {
     if (emailController.text.isEmpty) {
       showSnackBar('아이디를 입력하세요.');
@@ -430,29 +430,29 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // _showDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('회원가입'),
-  //         content: const Text('회원가입이 완료 되었습니다.'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pushNamed(context, '/loginPage');
-  //               // Navigator.of(context).pop();
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text(
-  //               'OK',
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('회원가입'),
+          content: const Text('회원가입이 완료 되었습니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Navigator.pushNamed(context, '/loginPage');
+                // Navigator.of(context).pop();
+                // Navigator.pop(context);
+              },
+              child: const Text(
+                'OK',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 // ID 중복체크
   getData() async {
