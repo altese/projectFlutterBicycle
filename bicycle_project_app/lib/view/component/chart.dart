@@ -30,6 +30,7 @@ class _ChartState extends State<Chart> {
   @override
   void initState() {
     super.initState();
+    print(Rent.rentCounts[12]['rcount']);
   }
 
   @override

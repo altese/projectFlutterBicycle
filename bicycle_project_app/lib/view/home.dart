@@ -27,14 +27,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     //바텀 바 아이콘
     List pages = const [
-      HomePage(),
+      // HomePage(),
       SimpleMap(),
       Home2(),
       ChartPage(),
       MyPage()
     ];
     final items = [
-      const Icon(Icons.home, size: 30),
+      // const Icon(Icons.home, size: 30),
       const Icon(Icons.map_rounded, size: 30),
       const Icon(MyFlutterApp.bicycle_2, size: 30),
       const Icon(Icons.bar_chart_rounded, size: 30),

@@ -173,7 +173,7 @@ class _UserInfoUpdateState extends State<UserInfoUpdate> {
   updateAction(String id, String pw, String name, String phone) {
     FirebaseFirestore.instance
         .collection('user')
-        .doc(userInfo.userId)
+        .doc(userInfo.docId)
         .update({'uId': id, 'uPw': pw, 'uName': name, 'uPhone': phone});
     _showDialog(context);
   }
