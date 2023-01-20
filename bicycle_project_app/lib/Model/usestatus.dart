@@ -1,31 +1,31 @@
 class UseStatus {
-  final String sta_loc;
-  final String rent_nm;
-  final String stat_data;
-  final String rent_cnt;
-  final String rtn_cnt;
-  final int start_index;
-  final int end_index;
+  final String staLoc;
+  final String rentNm;
+  final String statData;
+  final String rentCnt;
+  final String rtnCnt;
+  final int startIndex;
+  final int endIndex;
 
   const UseStatus({
-    required this.sta_loc,
-    required this.rent_nm,
-    required this.stat_data,
-    required this.rent_cnt,
-    required this.rtn_cnt,
-    required this.start_index,
-    required this.end_index,
+    required this.staLoc,
+    required this.rentCnt,
+    required this.statData,
+    required this.rentNm,
+    required this.rtnCnt,
+    required this.startIndex,
+    required this.endIndex,
   });
 
   factory UseStatus.fromJson(Map<String, dynamic> json) {
     return UseStatus(
-      sta_loc: json['STA_LOC'] as String,
-      rent_nm: json['RENT_NM'] as String,
-      stat_data: json['STAT_DATA'] as String,
-      rent_cnt: json['RENT_CNT'] as String,
-      rtn_cnt: json['RTN_CNT'] as String,
-      start_index: json['START_INDEX'] as int,
-      end_index: json['END_INDEX'] as int,
+      staLoc: json['STA_LOC'] as String,
+      rentNm: json['RENT_NM'] as String,
+      statData: json['STAT_DATA'] as String,
+      rentCnt: json['RENT_CNT'] as String,
+      rtnCnt: json['RTN_CNT'] as String,
+      startIndex: json['START_INDEX'] as int,
+      endIndex: json['END_INDEX'] as int,
     );
   }
 }
