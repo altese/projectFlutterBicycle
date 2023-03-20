@@ -6,7 +6,7 @@
 <a href="" rel="nofollow">포트폴리오 PDF</a>
 
 <img src="https://user-images.githubusercontent.com/113036608/213998064-91428e50-80ec-4e94-b89c-dd6f9217d162.png" width="30" height="15" style="max-width: 100%;">
-<a href="" rel="nofollow">YouTube 영상</a>
+<a href="https://www.youtube.com/watch?v=rh22HupK9sc" rel="nofollow">YouTube 영상</a>
 
 <br>
 
